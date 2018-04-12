@@ -1,0 +1,398 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\title{Terra: A price-stable and democratic money-as-protocol}
+\author{\{do, nick\}@terra.money}
+\date{\today \\v0.0.8}
+
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A price stable cryptocurrency would allow for more mass adoption outside of mere trading and speculation. Bitcoin has provided part of the solution, but it has become more of a commodity akin to gold rather than a medium of exchange or unit of account. We propose Terra, an alternative to Bitcoin which expands and contracts in supply to stabilize unit price. Similar to how fiat currencies are supported by sovereign taxation, Terra is supported by taxation  on the value created on its network. Superior to fiat currencies, Terra operates under a decentralized guarantee of solvency, eliminating risks of currency failures and Soros attacks. Finally, Terra engages in decentralized fiscal spending, ensuring that economic growth is distributed equitably via democratic consensus rather than via a politicized system of elected delegates. 
+
+The need for a decentralized, price-stable protocol of money is massive in both fiat and blockchain economies. If such a protocol succeeds, then it will have an enormous impact and prove to be the best use case for cryptocurrencies in the real world. 
+
+\end{abstract}
+
+\pagebreak
+\tableofcontents
+\pagebreak
+
+\section{Introduction}
+
+Short-term price-stability is a central component of any mainstream currency. Without it, currency cannot be relied on as a store of value, as the value of one's savings could plummet overnight. Price volatility is also unacceptable for mediums-of-exchange for a similar reason, as it introduces risk of appreciation on the part of the purchaser and risk of depreciation on the part of the merchant. Finally, price volatile currencies cannot be used as a unit of account, as the purchasing power implied by contractual obligations and balance sheets would roller-coaster over time. 
+
+With the explosion of the decentralized economy, dApps are starting to discover the importance of price stability as well. For utility token projects, it is difficult to build an economy on tokens that are inherently subject to price speculation, as it is difficult to build a medium-of-exchange paradigm on such tokens. Imagine deciding to become a storage service provider on Filecoin, only to have your revenues fluctuate massively due to its price-volatility. People often forget that cryptocurrencies must first function effectively as currencies before the utility of their technologies can be proven. 
+
+Many people correctly see the development of a price-stable cryptocurrency, a "stable-coin," as a massive opportunity. But not many yet understand that the responsibility involved is commensurately large. Currency regimes have a responsibility to equitably distribute economic growth. Today, fiat fiscal spending suffers from centralization risk in its elected delegates, which are influenced by political variables and corporate lobbies. This leads to inefficient and inequitable allocation of capital. Bitcoin has not done much better, as its inflexible scarcity has vastly enriched early investors and alienated late-comers. A mainstream, truly global cryptocurrency will ensure that growth in the system is distributed equitably by the decentralized consensus of its constituents. 
+
+In this white paper, we propose a new cryptocurrency \textit{Terra} that is as stable as the earth and global in ambition. We will first formalize the problem requirements of price-stabilizing a decentralized currency. Secondly, we will define a protocol that holds the requisite solution properties, and show why it is sufficiently robust. Lastly, we will also show how this protocol can be extended as a platform for price-stability that allows third-party decentralized assets to achieve price-stability. 
+
+\section{The Price Stabilization Problem}
+
+In this section, we look at how fiat currencies achieve short-term price-stability, and how such mechanisms can be replicated on a decentralized protocol. 
+
+\subsection{The quantity theory of money}
+
+If we look past the bells and whistles of currency markets, we can see that money is just an expression of the value in an economic system. Simplistically stated, this means that should someone somehow happen to own all the money supply in an economy, he should be able to purchase all the value contained therein. Therefore, each unit of money is value-equivalent to a share of the economy's value, divided by the number of money units in circulation.  
+
+A couple of corollaries is evident. 
+
+\begin{itemize}
+    \item In the same economic system, should the money supply suddenly double, there would be twice as much currency to describe an equal amount of value. Therefore, the value of each unit of currency would be halved. Conversely, should the opposite were to occur, the unit value of currency would double. 
+    \item Similarly, should the value in the economy suddenly double with the same number of currency units, each currency unit would double in value. It's trivial to see that should economic output suddenly drop by half, each currency unit would also halve.
+\end{itemize}
+
+This insight is formalized in the Quantity Theory of Money, which states that the general price level of goods and services, denoted by the unit value of currency, is directly proportional to the money supply. QTM forms the foundation of monetary policies used by central banks, which expand the money supply when price levels are too high, and contract the money supply when price levels are too low. A decentralized protocol can rely on similar mechanisms to stabilize the unit price of its own cryptocurrency.  
+
+\subsection{Guarantee of solvency through taxation}
+
+Fiat currencies derive value from the solvency of their governments, which is estimated by contrasting the cash inflow from taxation to the cash outflow from fiscal spending. Governments which vastly outspent their income from taxes through an unrestrained mint have suffered sovereign debt crises and currency failures. Governments that exercised fiscal prudence, “living within their means,” have managed to defend the value of their currencies. 
+
+Formulated in a different way, fiat currencies are propped up by a centralized reserve value-defined by income from taxes. For a currency to retain its value, this reserve must be reasonably solvent. To formalize, the short-term purchasing power of a currency holds if the following inequality holds: 
+
+$$A_t + D_t < R_t + L_t$$ 
+
+Where $A_t$ , $D_t$, $R_t$, and $L_t$ are the resources available to the attackers, the defectors, the reserve and the loyalists at time $t$. Governments with a strong currency have generally kept $R_t$ prohibitively large to be shorted by speculators. 
+
+In order for a currency operated by a decentralized protocol to be viable, it must too provision a reserve with taxes collected from its network. We can do this by charging transaction fees from the blockchain network, since taxes are just transaction fees (weighted by politics) on a national payment network. Unlike fiat currency schemes, however, a protocol currency scheme must maintain a full-reserve populated with decentralized assets. 
+
+\begin{enumerate}
+    \item \textbf{Full reserve}: Protocol currencies are not backed by sovereign enforcement, and must therefore ensure full parity for every unit ever issued. It cannot issue bonds or get loans in good faith, since its only possibility of paying it back is the unfounded optimism of believers and loyalists. In such a scheme, the currency peg holds to the extent the belief of loyalists exceed the belief of defectors; any sustained recession or determined Soros attack can bring it to its knees. Therefore, it is not sufficient for a protocol currency to maintain a reasonably high value of $R_t$, but rather to keep the reserve ratio $>$ 1 by guaranteeing $R_t > A_t + D_t$. 
+    
+    \item \textbf{Decentralized assets}: The reserve must be constructed from decentralized assets, as centralized assets carry significant custodial risk. For one, real assets are governed by the goodwill of the foundation rather than transparent rules of the blockchain, creating short-term defection incentives for the foundation. There is also risk of seizures, regulatory scrutiny, bankruptcy or natural disaster.
+\end{enumerate}
+
+Through maintenance of a decentralized full-reserve, the system can operate via a guarantee of solvency that is capable of fully funding contractions. 
+
+
+\section{The Terra Protocol}
+
+Terra is a cryptocurrency price-pegged to a basket of currencies much like the IMF's SDR. At genesis, the composition of the basket will exactly mirror the composition of the SDR \footnote{Currently  U.S. dollar 41.73\%, Euro 30.93\%, Renminbi 10.92\%, Japanese yen 8.33\%, British pound 8.09\%. Source: International Monetary Fund.}, but the basket will, over time, include basic goods and services with worldwide usage and appeal such as gold, corn, and timber. This approach frees Terra from the monetary policies of any one government, and eventually allows it to transition to a completely fiat-independent monetary policy regime. 
+
+In the interest of simplicity, however, we will write as if Terra is pegged to a fiat currency such as the USD for the remainder of this paper. 
+
+
+\subsection{Overview}
+
+We outline the basic mechanism of the Terra Protocol. The protocol is guaranteed to be solvent by a full-reserve, which retains its value from the transaction fees collected from the network. The protocol operates via a guarantee of solvency, ensuring that the market value of the reserve is greater than the value of Terra in circulation. The stability of such a system is not maintained by blind faith and optimism of loyalists but a guarantee that the system can fully contract the money supply if need be. 
+
+Every pre-determined time period, the protocol engages in the following mechanisms to stabilize Terra's price: 
+
+\begin{itemize}
+
+\item \textbf{Price estimation via deposit holder vote}: The protocol estimates the current price for Terra relative to the asset it is pegged to by taking votes weighted-by-stake of the deposit holders in the Stability Reserve. 
+
+\item \textbf{Maintenance of full reserve}: The protocol maintains a “stability reserve” made up of user deposits with rewards varied to ensure the system is over-reserved. 
+    \begin{itemize}
+
+    \item \textbf{Luna tokens}: The protocol defines Luna, a token with fixed supply that generates rewards from Terra transactions, paid out for contributions to the system's price-stability and equity. 
+    \item \textbf{Reserve deposits}: Users are incentivized to deposit Luna into the Reserve, as deposits yield income from transaction fees collected from the network.
+    \item \textbf{Variable transaction fees}: The protocol levies a small fee from Terra transactions, calibrated to guarantee that the market value of the Stability Reserve exceeds Terra's circulating supply.
+    \end{itemize}
+    
+\item \textbf{Price stabilization by expansion and contraction of the money supply}: The protocol expands and contracts the supply of Terra tokens to calibrate the exchange rate with the peg, leveraging the Quantity Theory of Money intuition money supply = price level. 
+    \begin{itemize}
+
+    \item \textbf{Contraction by reserve}: When exchange rate of Terra $<$ price peg, the reserve buys up Terra from the market and burns it, contracting the money supply such that price level = money supply. 
+    \item \textbf{Expansion through fiscal spending}: When exchange rate of Terra $>$ price peg, the system mints new Terra and takes proposals / votes from Luna stakeholders to engage in decentralized fiscal spending for the betterment of the system.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Price estimation via deposit holder vote}
+
+Since the price of Terra in secondary markets is exogenous to the blockchain, the system must rely on a decentralized price oracle to estimate the true exchange rate. We define the mechanism for the price oracle as the following: 
+
+\begin{itemize}
+
+    \item The system defines “stability providers,” users with a significant stake in cold deposits in the stability reserve of the system.
+    \item Every $n$ blocks, stability providers cast their vote on what they think the exchange rate for Terra was. These votes are all cast on the same block, and the votes that exceed the block size are disregarded. 
+    \item The weighted median of the votes is taken as the true exchange rate. A part of the stake of the voters who voted outside 1 standard deviation is taken, and rewarded to voters who voted within. The punishments / rewards are calibrated by the system every vote to ensure that a sufficiently large portion of the stakeholders vote.
+\end{itemize}
+
+Unlike generic stakeholders, stability providers have a large incentive to defend the stability of the system, since price-volatility may lead to erosion or total loss of their deposits. Furthermore, by forcing votes to be made on the same block, the system avoids signaling risk, as voters are not aware of others' votes before the poll has closed. 
+
+This stake-weighted consensus-based selection algorithm guarantees the authenticity of price estimates as long as there is no collusion of more than fifty percent of the cold deposit holders. Note that the guarantee made here is similar to Bitcoin's regarding transaction validity, creating a price-oracle made secure by decentralized consensus. 
+
+
+\subsection{Full stability reserve}
+
+Most central banks maintain reserves directly via foreign currency and gold bullion holdings, as well as indirectly via fractional reserve requirements in licensed commercial banks. Similarly, Terra maintains a Stability Reserve that finances contraction of the Terra money supply whenever necessary. Given that Terra is not backed by a sovereign government, whose authority, monopoly of force and taxation provide solid backing to fiat currencies, the robustness of its Reserve is essential to stability. 
+
+The operating mandate of the Stability Reserve is to maintain a market value that is equal to or in excess of the value of Terra in circulation. If we define the Reserve Ratio to be the ratio between the value of the Stability Reserve and the value of circulating Terra, this is equivalent to saying that the mandate of the Stability Reserve is to maintain a Reserve Ratio of at least 1. The protocol achieves this by relying on the defining feature of Terra: transactional value. 
+
+\subsubsection{Luna token}
+The protocol relies on Luna for the price stability of Terra. Luna has a fixed supply, which is decided at genesis. Fees from Terra transactions are used to reward users who participate in the system's democratic process, which requires staking Luna in the Stability Reserve. Insofar as real transactions are taking place in the Terra economy, Luna tokenholders can expect steady rewards for their efforts. This property gives Luna tangible, non-speculative value. This is particularly important, as it will soon be clear that Luna also collateralizes the Terra economy.
+
+\subsubsection{Deposits}
+Users are incentivized to deposit Luna into the Reserve, as it is required to engage in activities that accrue rewards from transaction fees collected from the network. This is akin to variable interest being paid out to deposits in a bank. There are two types of Luna deposits:
+
+\begin{itemize}
+    \item Hot deposits: Withdrawable subject to a 24h withdrawal notice.
+    \item Cold deposits: Locked up for 100 days, withdrawable immediately thereafter.
+\end{itemize}
+
+Transaction fees are paid out to depositors on a pro-rata basis, weighted by the deposit type: payouts to cold deposits are weighted by a factor $w > 1$. The value of $w$ is initialized at 2, after which it is dynamically calibrated by the protocol based on the following:
+
+\begin{itemize}
+    \item Cold deposit ratio: the protocol aims to maintain a healthy ratio of Cold deposits in the Reserve, and will make Cold deposits more attractive if the ratio is low.
+    \item Terra price volatility: the protocol strongly incentivizes Cold over Hot deposits when the price of Terra is volatile. Volatility in the price of Terra increases the likelihood that the Reserve will be used to finance contraction of the Terra supply. Long-term commitments to the Reserve are needed more than ever during periods of volatility and imminent contraction.
+\end{itemize}
+
+\subsubsection{Reserve ratio band}
+
+The protocol establishes a minimum buffer above the guaranteed Reserve Ratio of 1 to ensure that it has the time and bandwidth to respond to drops in value. The Reserve Ratio it targets lies above that buffer, allowing for volatility in the value of the Reserve without the need to take action. The protocol also sets a ceiling for the Reserve Ratio, above which it is inefficient to be maintained.
+
+Formally, the protocol defines a band for the Reserve Ratio $(r_{min}, r_{max})$ and a target ratio $r*$, where $1 < r_{min} < r* < r_{max}$. The protocol restricts the Reserve Ratio within the band and targets $r*$. The definition of the band relies on the maximum drawdown in the price of Luna over the past $100$ days, which we call $d$. 
+
+\begin{itemize}
+    \item $r_{min}$ is set to the fixed value 1.2
+    \item $r*$ is defined as $r_{min}/(1-d)$. Equivalently, $r*$ is defined so that a drawdown of $d$ in the Reserve Ratio would result in $r_{min}$. E.g. if $d = 1/2$ then $r* = 2r_{min}$
+    \item $r_{max}$ is defined as $2{r*} - r_{min}$, i.e. it is defined so that $r*$ is the average of $r_{min}$ and $r_{max}$
+\end{itemize}
+
+
+The protocol determines the target Reserve Ratio $r*$ based on the recently experienced volatility in the price of Luna. Given that the Reserve Ratio must remain consistently above 1, the target increases when the price of Luna is likely to experience big drops. As such, the band within which the Reserve Ratio is restricted is fat when the price of Luna is volatile/experiences major drawdowns, and shrinks when the price of Luna is stable or it experiences steady growth. The protocol thus shields the Reserve Ratio commensurately to the volatility it is being exposed to.
+
+\subsubsection{Iterative transaction fee calibration}
+
+Transaction fees are the primary lever that the protocol uses to calibrate the Reserve Ratio when it drifts outside of the desired band. When the Reserve Ratio drops below $r_{min}$, the protocol increases transaction fees to bring it back up. Conversely, when the Reserve Ratio grows above $r_{max}$, the protocol decreases transaction fees to lower it. Intuitively, transaction fees control the cash flows that accrue to Luna holders. For example, an increase in transaction fees increases the expected cash flow that Luna holders receive. As such it increases the price of Luna, and consequently the value of the Reserve.
+
+To this end, the protocol implements a novel algorithm, Dynamic Multiplication / Milestone-based Decrement (DMMD), which calibrates transaction fees iteratively to keep the Reserve Ratio within bounds. Transaction fees are calculated proportionally to the value of each transaction, and are initialized at 0.1 percent. Fees are dynamically increased when the protocol determines that the Reserve Ratio needs to increase, and decreased when the Reserve Ratio is favorable and the Terra economy experiences sustainable growth. DMMD takes inspiration from the AIMD algorithm used by TCP for congestion control.
+
+DMMD takes the following steps:
+
+\begin{itemize}
+    \item \textbf{Dynamic multiplication of fees}: When the Reserve Ratio drops below $r_{min}$, the protocol multiplies transaction fees by $m = {r*}/r_{min}$. Let $f$ be the previous transaction fees; then $f' = mf$.
+    
+    \item \textbf{Milestone}: The new transaction fees remain in effect until the supply of Terra has experienced net growth percentage of at least $m$. E.g. if transaction fees were increased by 50 percent, the increase will remain in effect until the supply of Terra has experienced net growth of at least 50 percent.
+    
+    \item \textbf{Milestone-based decrement of fees}: After the growth milestone has been reached, transaction fees are subject to a decrement schedule of 0.02 percent every 10 days. Fees are also decremented by 0.02 percent for every consecutive 24h period during which the Reserve Ratio lies above $r_{max}$.
+\end{itemize}
+
+DMMD hikes up fees when the Reserve Ratio drops out of the band. The fee hike targets a Reserve Ratio of $r*$. This is done by multiplying fees by the factor the Reserve Ratio needs to grow by to reach $r*$. For example, if the Reserve Ratio needs to grow by 10\% to reach its target, the protocol increases fees by 10\%. The fee increase produces a surplus in fee revenue, driving up the value of the Reserve. In the Stability Analysis section we demonstrate that this procedure achieves the target Reserve Ratio $r*$. The protocol maintains the increased fee regime until the Terra economy has grown sufficiently to cover the fee surplus it provides. In the earlier example, as soon as the Terra supply has grown by 10\% transaction fees can return to previous levels while maintaining in absolute value the fee surplus that has been achieved. In other words, after the growth milestone has been hit, the protocol can iteratively decrement fees. If the Reserve Ratio grows beyond the ceiling $r_{max}$, transaction fees can be safely decremented.
+
+Under situations of extreme duress, multiple fee increases may need to take place before the Reserve Ratio sits comfortably within the band. Since fee increases are calibrated based on the maximum Luna price drawdown recently experienced, each subsequent fee increase will be more aggressive than the previous one during a period of such high volatility. This limits the need for subsequent fee increases to truly extreme conditions. Fee increases can take place at most once every 24h. This is an additional layer of protection to prevent sharp fee increases when the price of Luna experiences volatility that is significantly higher than previously observed.
+
+The value of transactions is calculated under the assumption that Terra is on par with its pegged asset. If that is not the case, the effective transaction fee may be higher/lower. For example, if the price of Terra has drifted 5 percent below its peg, the transaction fee levied will be approximately 5 percent higher to compensate for the drop. This adjustment allows the protocol to shield transaction fees from short-term volatility in the price of Terra.
+
+
+
+\subsection{Contraction by leveraging deposits}
+
+When the price of Terra drifts below its peg, the protocol borrows Luna from the Stability Reserve and uses it to purchase Terra from the open market and burn it. Luna is borrowed from all deposits on a pro-rata basis. As explained in the "full stability reserve" section, transaction fees are calibrated to keep the reserve ratio always greater than the size of the Terra economy. 
+
+\subsection{Expansion by decentralized fiscal spending}
+
+Most stable-coins have a multi-coin structure where new money supply in expansionary cycles is rewarded or used to increase the value of collateral tokens. While this may seem to be positive for stabilization, in reality it creates a speculative dependency between the strength of the reserve and uncertain expectations for future growth. Growth-dependent reserves / collateral schemes are inherently downward failure prone, as sharp recessions dampen future growth outlook and collapse the value of the backing assets. 
+
+Luna deposits accrue interest rate from Terra transaction fees instead of new money supply. Not only is this approach less speculative, as the issuance of transaction fees are not dependent on a binary outcome of growth, but it gives the system a control lever, the rate of fees, to counter market volatility to stabilize the value of the reserve. During contractions, the system can increase transaction fees, increasing expected cash flow for deposit holders and thereby the valuation of the reserve. During expansions the system can decrease transaction fees, reducing the value of the reserve and resulting in more favorable costs of capital.  
+
+So how does the Terra protocol spend its newly minted money supply? Recall that governments not only have a responsibility to keep prices stable, but also to distribute wealth toward socially responsible areas. Fiscal spending in key areas such as infrastructure, community housing, and subsidies are essential to ensuring financial inclusion for people disenfranchised from the system. However, resource allocation in governments today are incredibly inefficient because of centralization costs, such as corruption, regional self-interest, and corporate lobbies. Decentralized fiscal spending has the power to make sure resource allocation can be achieved through consensus, such that more people can take part in fiscal governance to decide what can best enhance the ecosystem.
+
+The system defines the following variables:
+\begin{itemize}
+    \item \textbf{Delegates}: users with more than 1000 Luna in cold deposits in the stability reserve. The system assumes these nodes to have significant loyalty in the system, given the size of their deposits. Each delegate proposes and votes for funding proposals in the decentralized legislature, their vote weighted by their own stake and the stakes of other deposit holders who stake with them. Each delegate is assigned a uid.
+    
+    \item \textbf{Decentralized legislature}: Terra convenes a decentralized legislature, which operates over a session of n blocks, spanning over several weeks. The legislature's mandate is to reach a consensus on how Terra's economic growth should be spent.
+    
+    \item \textbf{Funding proposals}: Each delegate can submit and vote on funding proposals. A funding proposal is a tuple containing the size of the funding request, the destination wallet address, the uid of the delegate, and a WWW url link describing the proposal.
+\end{itemize}
+
+
+Every 15 minutes, when Terra's exchange rate $>$ peg, the system issues $\frac{P{'} Q{'}}{P} - Q$ new Terra, and sells it in open market operations for Ethereum. After settling its debts accrued from contractions to deposit holders, the Ethereum is deposited in a special smart contract wallet.
+
+The system defines a session for the decentralized legislature, which spans over $n$ blocks, roughly equivalent to 1 month. At the beginning of every session, the legislature considers how to use the Ethereum gains from the previous session. 
+
+\begin{itemize}
+    \item At the beginning of each session, stakers have a chance to examine the voting histories / proposals of each delegate and shuffle allegiances. Stakers can also choose to abstain from supporting a candidate without losing their rewards. 
+    
+    \item During the session, each delegate can submit and vote on funding proposals. Delegates can also vote against funding proposals.
+    
+    \item At the end of the session, funding proposals are arranged in a queue, ordered by vote balance (votes for stakes - votes against stakes). Each proposal is dequeued in a FIFO order, until all the Ethereum from the previous session is expended. Funding proposals with negative vote balances are removed from the queue. 
+    
+    \item If there are Ethereum funds remaining from the session, they are moved to the next session of the legislature.
+    
+    \item Participants in the legislative process are rewarded with the transaction fees collected in the previous session proportional to the size of their stake. This way, the reward given is proportional to their democratic efforts.
+    
+\end{itemize}
+
+
+This decentralized governance of fiscal spending returns control of money back to its users, and affords greater room for financial inclusion than the state-operated models today. 
+
+\subsection{Genesis fiat reserve}
+
+Although we expect the Stability Reserve and the Terra Protocol to be effective in maintaining the full reserve guarantee in the long run, special safeguards need to be put in place in the early days after network launch. First, the market will need time to adjust to the Protocol before rational valuations can be made. Secondly, the network may be vulnerable to low-liquidity trading and low transaction volume at genesis, which will result in volatile transaction volumes and therefore uncertain rewards for Luna stakers. 
+
+Therefore, at genesis, the Foundation will use its votes it to direct new money supply to a fiat reserve. This fiat reserve will act as a guarantor of last resort, buying up Terra during extreme market downturns and providing an additional layer of safety to the Protocol. Given that keeping the price-stability of the peg is a need most early participants realize, the Foundation will likely succeed in winning over sufficient votes such that most new money supply will go to the fiat reserve, maintaining near 1:1 parity between the Terra economy and the fiat reserve. 
+
+With the maturation of the Terra economy, other stabilizing forces will start to appear. Third party decentralized apps being built on the Terra protocol will both grow the size of the economy and diversify its assets to make it more vulnerable to external price shocks. The Protocol's stabilizing mechanisms will grow more effective, with the market growing more sensitive to its signals. When such a time comes, Terra will have to be weaned slowly from the fiat reserve and operate as a completely decentralized currency.
+
+The beauty of the decentralized legislative model is that it allows for such critical decisions to be made via democratic consensus. As the community starts to gain more faith in the ability of the Protocol to operate independently, it will start to vote for other funding proposals unrelated to the fiat reserve. Thus, Terra can be protected by a robust fiat reserve at genesis and organically outgrow its protection through its decentralized legislative system.
+
+
+\section{Stability Analysis}
+
+The protocol guarantees the stability of Terra via the Stability Reserve, whose mandate is to be consistently more valuable than the supply of Terra in circulation. If the Reserve is able to maintain a Reserve Ratio of at least 1, it is capable of contracting Terra supply to whatever extent necessary in order to maintain its peg. In this section we argue the following:
+
+\begin{itemize}
+    \item The DMMD algorithm restricts the Reserve Ratio within its band in almost all situations
+    
+    \item The DMMD algorithm achieves this while enforcing low and sustainable transaction fees
+\end{itemize}
+
+We further review the two significant threats to stability that the Reserve is tasked to defend against and demonstrate DMMD's effectiveness in doing so: price shocks and prolonged recessions.
+
+Before arguing for the effectiveness of DMMD, we present a valuation model for Luna that will be useful for our analysis. Luna can be thought of as a non-dilutive share in future transaction fees accrued by the Terra network. As such, we value the Reserve as the NPV of future transaction fees. Formally:
+
+$$R_T = \sum_{t=T}^{\infty}\frac{f_tS_t}{(1+r)^t}$$ \newline
+
+Where $R_T$ is the value of the Reserve at time $T$, $f_t$ is the transaction fee at time period $t$, $S_t$ is the Terra transaction volume at time period t and r is the discount rate.
+
+An equivalent formulation which will be illustrative later on is the following:
+ $$R_t = f_tT_tV_tm_t$$
+ 
+ Where $R_t$ is the value of the Reserve, $f_t$ is the transaction fee, $T_t$ is the Terra supply, $V_t$ is the velocity of money and $m_t$ is an earnings multiple for Luna, all at time $t$. If $t$ is annual, $f_tT_tV_t$ represents the transaction fee earnings accrued to the Reserve during year $t$ (recall that the total value of transactions during some period is equal to the money supply multiplied by its average velocity during that period).
+
+\subsection{Enforcement of reserve ratio band}
+
+We claim the following: 
+The Reserve Ratio is guaranteed to stay within its band under DMMD, barring short periods ($<$24h) of extreme unforeseen volatility or wildly irrational markets. This is a consequence of the following:
+
+
+\begin{itemize}
+    \item If the Reserve Ratio drifts below the lower end of its band, DMMD will bring it close to the target ratio $r*$.
+    
+    We claim that fee multiplication enforced by DMMD subject to the algorithm's subsequent Milestone and fee Decrement schedules will have an approximately linear effect on the Reserve Ratio under rational markets, thus bringing it close to the target ratio $r*$. We argue this based on the Luna valuation model laid out earlier. Observe that each discounted transaction fee cash flow is linear in the transaction fee charged during that period, holding transaction volume fixed. Let $m$ be the multiplication factor applied to fees by DMMD, and let $P$ be the number of periods elapsed before Terra supply grows by a factor of $m$. Multiplying the transaction fee by $m$ similarly multiplies cash flows by $m$ for the $P$ time periods that follow. The scaling of cash flows by a factor of $m$ for the first $P$ terms of the NPV calculation results in an approximately linear scaling of the entire sum, keeping in mind the exponentially growing discount as time periods increase. We further note that the fee growth rate applied thereafter is likely to be higher seeing as the Terra economy is experiencing growth following the $P$ time periods discussed. \footnote{The above analysis assumes roughly constant Terra velocity, and that small fee increases have negligible impact on transaction volume (which is a reasonable assumption given fees charged will be significantly less than those charged by traditional card processors).}
+    
+    \item If the Reserve Ratio drifts above the upper end of its band, DMMD will bring it close to the target ratio $r*$.
+    
+    The mechanism that enforces this is simple: DMMD decrements the transaction fee by a fixed amount whenever the Reserve Ratio remains above $r_{max}$ for a small amount of time. Once the growth milestone has been hit, DMMD will iteratively decrement transaction fees to further reduce the Reserve Ratio.
+    
+\end{itemize}
+
+\subsection{Transaction fee sustainability}
+
+We claim that the transaction fees enforced by the DMMD algorithm can be kept sustainably low compared to traditional card processors. We review the evolution of transaction fees during periods of growth and recession.
+
+
+\begin{itemize}
+    \item Transaction fees in a period of growth
+    
+    Observe that during a period of growth of the Terra supply, the expected growth rate and the discount rate in assessing future cash flows are likely to increase/decrease respectively. As such, the transaction fees required to sustain a Reserve Ratio within the band are lower, even as the supply of Terra increases. DMMD will iteratively decrease transaction fees during this period.
+    
+    \item Transaction fees in a recession
+    
+    We begin by observing that a transaction fee hike occurs when the Reserve Ratio drops below $r_{min}$, the lower end of the band. The target Reserve Ratio $r*$ targeted by the previous fee increase was determined so that any drawdown in the price of Luna not larger than what had been experienced in the past 100 days would keep the Reserve Ratio within the band. As such, a transaction fee hike takes place only when Luna experiences a significant price drop. The hike is proportional to $1-d$, where $d$ is the maximum drawdown during the past 100 day period. This implies that in aggregate, a 90 percent total decline in the price of Luna would result in a transaction fee hike of at most 10x. Considering the initial transaction fee is 0.1 percent, a 10x hike is still sustainable until growth recommences.
+\end{itemize}
+    
+To ground the sustainability of the transaction fee schedule implemented by DMMD, we confirm with realistic numbers that a Reserve Ratio of 1 is easily achievable. Consider the latter formulation of the price of the Luna supply, At an annual money velocity of 10, which is the velocity of USD's M1, and a conservative earnings multiple of 40, which Visa is currently priced at, a transaction fee of 0.25 percent is sufficient for a Reserve Ratio of 1. At a maximum drawdown of 50 percent, which is very high, the target Reserve Ratio would be 2.4, implying a transaction fee of 0.6 percent under similar assumptions. In practice, we expect velocity of Terra to be much higher than that of M1 of the USD, given that the primary use case for the stable-coin in the early days will be as a medium of exchange in a payment network system rather than a store of value. This means that we will likely be able to charge even more competitive transaction fees, and leverage transaction fees even more aggressively during time of duress. 
+Finally, we review the Reserve's resilience against two significant threats to stability.
+
+\subsection{Price shocks}
+
+Arguably the most lethal risk to the survival of a stable-coin is a sudden price shock. This may come in many forms, such as a Black Swan event or a shorting attack. The defining characteristic of a price shock is a big and sudden selloff with high volume, usually coupled with a sudden loss of faith in the system. Shocks are hard to defend against because they typically compromise the value of speculative collateral, or if there is no collateral the market's support for the currency. In the case of a shorting attack, a well-resourced attacker can eat through fat reserves if they do not offer full collateralization. Stable-coins that appear to be perfectly healthy can get wiped out like this.
+
+As argued in the earlier sections, the Stability Reserve is guaranteed to maintain a Reserve Ratio of at least 1 almost consistently. A price shock would trigger a strong transaction fee hike that would offer significantly increased cash flow to Luna holders for a predictable period of time. This guarantee is strengthened by the nature of Terra's collateral. The reliance of Terra on an endogenous non-speculative revenue-generating asset, Luna, makes the protocol immune to such shocks. Luna is backed by the transactional value of Terra. Insofar as Terra is a useful currency that people choose to transact with, Luna will retain its value by virtue of the Terra cash flows it generates.
+
+\subsection{Prolonged recessions}
+
+A prolonged recession is a possibility all stable-coins need to defend against. It is a particularly hard scenario to design for, as all private currencies to some extent rely on demand for their stability. Most currencies enter a death spiral they can't get out of when a prolonged recession starts to take place.
+
+The Terra protocol guarantees that the Stability Reserve remains adequately funded during recessions, and that it gracefully contracts while steadfastly maintaining the stability of Terra. We demonstrated the mechanism by which the Reserve Ratio stays afloat during prolonged recessions in the previous section: transaction fees gradually increase to counter the decrease in the supply of Terra and the price of Luna. Intermittent growth brings fees back down to make the fee schedule more sustainable. The DMMD algorithm allows graceful contraction with sustainable transaction fees by design. We further note that incentives for Cold deposits significantly strengthen during recessions, as the payout weight in favor of Cold deposits increases. This ensures that there is sufficient incentive for depositors to sustain the Reserve during the recession.
+
+
+\section{A Look at Other Stable-coins}
+
+We discussed earlier why a stable-coin scheme is robust if and only if it maintains a full reserve of decentralized assets. To the best of our knowledge, Terra is the first stable-coin project to attempt this; previous implementations forfeit either the full reserve or the decentralization of their backing assets. 
+
+\subsection{Real asset backed model}
+
+There are a number of coins claiming to be backed 1:1 by fiat (Tether), gold (Digix) or some other real world asset. The construction involves a centralized reserve holding the collateral, such as a bank account or a safe, and a legal framework to support the mapping between the tokens and the reserve. 
+
+It is easy to see there is significant centralization risk in this model. The reserve could be seized by regulators. The foundation supporting the reserve could steal the reserve. The holding bank could be robbed / go bankrupt. Trust is required of centralized custodians and natural circumstances. Centralized models also incur custodian costs. The foundation maintaining the reserve has to pay for operational overhead; legal fees to deter regulatory challenges, software infrastructure, and staffing costs. Recent uncertainty around Tether, from SEC's regulatory attention, the Foundation's lack of transparency, to troubled banking relations with the company's banking founders all indicate that real-asset collateralization has significant long term risks due to centralization. 
+
+\subsection{Margin call model}
+
+Instead of real-world assets, some coins choose to be backed with volatile crypto assets, such as Ethereum. Over-collateralization is required to protect the stable-coin from the underlying asset's own price-volatility. Shocks in the value of the collateral will either propagate to the value of the coin, or will trigger a margin call which destroys the coin and returns the collateral to the owner unless more collateral is posted. This is anything but stability: even if the market value of the coin avoids the shock, the only way to keep using it is by further increasing (over)exposure to a volatile asset that just suffered a price shock!
+
+\subsection{Bond model}
+
+Some stable-coins choose not to be backed by anything at all, instead electing to issue bonds. We discussed earlier why protocol currencies cannot issue bonds in good faith. The scheme can potentially be extremely unstable, succeeding only so far as there are more believers of the system as there are defectors. Even if loyalists are better resourced for a time, through an extremely well funded foundation or etc, such a scheme is bound to fail if a similarly well-leveraged attacker were to emerge, or if the economy were to enter a sustained recession (as they do from time to time). 
+
+\section{The Terra Platform}
+
+Although a global, transactional currency is the most obvious application for Terra, many other decentralized applications can also benefit from its price-stability. Every token economy needs its currency to be a price-stable store-of-value and medium-of-exchange. This need has led each token project to implement its own rudimentary stable-coin scheme, creating hundreds of separate monetary policies and thousands of potential Soroses. The introduction of a stable cryptocurrency application platform will allow dApp developers to delegate monetary policy to Terra and focus on their core competencies. 
+
+In this section, we show how the Terra Protocol can be extended to provide price-stability as a platform for third party dApps. We outline the broad mechanisms that allow price-stable assets to be built on the Terra Protocol. Code-level specifications and implementation details of this platform are outside of the scope of this document. 
+
+\subsection{The mechanism}
+
+Terra is collateralized by the transaction fees collected from its network. The basic mechanism of the Terra platform is similarly straightforward; the system collateralizes the dApp token economy from the transaction fees collected from it. We describe the mechanism of the Terra platform, by showing how it stabilizes the price of a fictional dApp token called ABC. 
+
+For the purposes of this section, let $X$ note the transaction fees collected, $P$ the price, $Q$ the money supply, and $R$ the size of the Stability Reserve. 
+
+\begin{itemize}
+    \item \textbf{Genesis contract}: At network genesis, the developer fixes the genesis supply of ABC.
+    
+    \item \textbf{Learning period}: In the beginning of the learning period, the system allows the price of ABC to float. While doing so, it collects transaction fees from the ABC economy, until the total amount of fees collected is at least $ P^{ABC}_{t}Q^{ABC}_{t} \frac{r_{min}}{2}$. During the learning period, the system may choose to levy a higher tx fee on the ABC economy than the rest of the Terra ecosystem to speed up the transition to the next phase.
+    
+    \item \textbf{Stability period}: As the system switches over from the learning period to the stability period, it fixes the current exchange rate between Terra and the new token to be the peg. The Terra platform expands and contracts the supply of the new token, to keep the exchange rate of the token around the peg. 
+    
+    \begin{itemize}
+        \item The token economy maintains an allegiance ratio, which is defined by the function:  
+        
+        $$\frac{
+            min(R_t \frac{X^{ABC}_t}{X^{total}_t}, \sum_{t} X^{ABC}_t)
+        }{
+            P^{ABC}_{t}Q^{ABC}_{t}
+        }$$
+        
+        This means that the Terra protocol will collateralize the token economy to the extent of its contribution to the ecosystem, quantified in transaction fees. 
+        
+        \item The Terra platform does not obey a hard peg, but rather chooses to use a fluctuating band around the target exchange rate. The width of the band is inversely proportional to the allegiance ratio, such that it is thin when a lot of tx fees are being collected from the network, and thick when few tx fees are being collected from the network. The system contracts the supply of the new token when the exchange rate $<$ band floor, and expands the supply when the exchange rate $>$ band ceiling.
+        
+        \item The developer defines a callback \texttt{mint(int numNewTokens)} that is called whenever new tokens are minted during expansionary cycles.  
+        
+    \end{itemize}
+\end{itemize}
+
+        
+        
+
+\subsection{Observations}
+
+\begin{itemize}
+    \item \textbf{Stabilization mechanism is blunt when transaction fees are low.} Token economies have an incentive to pay transaction fees honestly, as the stability mechanism is calibrated to favor economies that pay more tx fees. Such a scheme will likely favor token economies that are structured to be more transaction heavy. In order to level the playing field, we can introduce a holding fee in the form of inflation, and account for it in the allegiance ratio. 
+    
+    \item \textbf{Bad developers can't bankrupt the reserve.} Note that the stability reserve never expends more than the total amount of transaction fees collected from the token economy in trying to stabilize it, meaning Terra's trade balance with the token economy is always positive. This deters any bad actors looking to profit from the Stability Reserve by creating ghost tokens. 
+\end{itemize}
+
+\subsection{An alliance of currencies}
+
+Through the mechanism outlined above, the Terra platform manages to create an alliance of currencies that collaborate with each other to stabilize the price. Each new token economy built on the Terra platform help to diversify the economic alliance, as transaction fee decreases in one token economy may be hedged by an increase in another. Furthermore, the ecosystem benefits from the sheer scale of multiple economies working together, increasing the cost of Soros attacks and decreasing vulnerabilities from external price shocks. 
+
+
+\section{Conclusion}
+
+Terra is the first price-stable cryptocurrency that can make a guarantee of solvency with a reserve made up of decentralized assets. The price-stability of such a regime cannot be taken away by centralized actors nor attacked by speculators. Terra is an improvement on both fiat currencies and Bitcoin, since it is safe from both speculative volatility and political pollution of its monetary policy.  
+
+If Bitcoin's contribution to cryptocurrency was immutability, and Ethereum expressivity, our value-add will be usability. The potential applications of Terra is immense. Immediately, we foresee Terra being used as a medium-of-exchange in online payments, allowing people to transact freely at a fraction of fees charged by Visa and Mastercard. As the world starts to become more and more decentralized, we see Terra being used as a dApp platform where price-stable token economies are built on Terra. Terra is looking to become the first usable currency and stability platform on the blockchain, unlocking the power of decentralization for mainstream users, merchants, and developers.
+
+
+% \bibliographystyle{plain}
+% \bibliography{references}
+
+% \nocite{*}
+
+\end{document}
