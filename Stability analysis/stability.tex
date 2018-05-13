@@ -35,7 +35,7 @@ Demand stickiness and low volatility have important implications on our stabilit
 	\centering
 	\includegraphics[scale=0.35]{fig1.png}
 	\caption[]
-	{AMEX, Visa, Mastercard revenues 2010-2018}
+	{VISA/AMEX/Mastercard price compared to SP 500 2008-2018}
 \end{figure}
 
 
@@ -43,14 +43,14 @@ Demand stickiness and low volatility have important implications on our stabilit
 	\centering
 	\includegraphics[scale=0.35]{fig2.png}
 	\caption[]
-	{VISA/AMEX/Mastercard market cap compared to SP 500}
+	{AMEX, Visa, Mastercard revenues 2008-2018}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.35]{fig3.png}
 	\caption[]
-	{Visa earnings compared to the price of gold}
+	{Visa earnings compared to the price of gold 2008-2018}
 \end{figure}
 
 
@@ -92,23 +92,24 @@ At genesis we maintain a 100\% fiat reserve that guarantees stability in the ver
 
 Earlier we argued that demand for payment networks like Terra is very sticky — businesses who start relying on Terra and consumers who develop spending habits tend to stick. We now present a quantitative version of this argument, considering the number of e-commerce companies using Terra, $n$, and the probability that any one company churns over a year, $p$. The number of e-commerce companies using Terra is a good proxy for Terra demand. We demonstrate that as $n$ grows (adoption) and $p$ drops (stickiness) the volatility of Terra demand drops very fast. We further quantify the probability that demand will fall below a given threshold and obtain high-probability bounds for it.
 
-Observe that the number of companies to churn in a given year follows a Binomial distribution with parameters $n$ and $p$, and is closely approximated by a Normal distribution with mean $np$ and variance $np(1-p)$. The relative volatility of demand (volatility divided by $n$) is therefore $sqrt(np(1-p))/n$. As $n$ grows and $p$ decreases this value decreases rapidly. \textbf{Intuitively, all this says is that demand for Terra becomes very stable as adoption grows and churn likelihood decreases.}
+Observe that the number of companies to churn in a given year follows a Binomial distribution with parameters $n$ and $p$, and is closely approximated by a Normal distribution with mean $np$ and variance $np(1-p)$. The relative volatility of demand (volatility divided by $n$) is therefore $\frac{\sqrt{np(1-p)}}{n}$. As $n$ grows and $p$ decreases this value decreases rapidly. \textbf{Intuitively, all this says is that demand for Terra becomes very stable as adoption grows and churn likelihood decreases.}
 
 We can easily obtain confidence intervals for demand using this model. To make this concrete let's explore possible scenarios for Terra adoption 1, 3 and 5 years from now, making aggressive assumptions about churn likelihood. To make this analysis statistically significant we consider e-commerce partners to be companies with significant transaction volume (\$1B+ in GMV).
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c| } 
  \hline
-Year & Tx vol (\$B) & Partners & Churn Prob \% & Max Demand Drop \% \\
+Year & Tx vol (\$B) & Churn Prob \% & Max Demand Drop \% & Fiat Ratio \% \\
  \hline \hline
-1 & 30 & 20 & 20 & 43 \\
+1 & 10 & 20 & 43 & 100 \\
 \hline
-3 & 100 & 50 & 10 & 21 \\
+3 & 60 & 10 & 21 & 20 \\
 \hline
-5 & 250 & 100 & 5 & 11 \\
+5 & 140 & 5 & 11 & 10 \\
  \hline
 \end{tabular}
 \end{center}
+
 
 Note that the maximum drop in demand that we expect decreases as the number of partners increases and churn likelihood decreases. We can expect with high confidence, for example, that after 3 years drops in demand should not exceed 21\%. Some of the assumptions that this model makes will be false, so it will clearly not be fully accurate, but it delivers the main message, which is that demand for Terra is sticky and becomes stable quickly. We will be closely observing how churn probabilities evolve over time and how they impact volatility in Terra demand.
 
