@@ -55,8 +55,8 @@
 \begin{document}
 \title{Terra Money:\\
 Stability and Adoption}
-\author{Evan Kereiakes (evan@terra.money) \and Do Kwon (do@terra.money) \and
-Marco Di Maggio (marco@terra.money) \and Nicholas Platias (nick@terra.money)}
+\author{Evan Kereiakes, Do Kwon,
+Marco Di Maggio, Nicholas Platias}
 \date{February 2019}
 \maketitle
 \begin{center}
@@ -105,7 +105,7 @@ settings prohibitively expensive.
 At the core of how the Terra Protocol
 solves these issues is the idea that a cryptocurrency with an elastic
 monetary policy would stabilize its price, retaining all the censorship
-resistance of Bitcoin, and making it viable for use in everyday transactions.However, price-stability is not sufficient to get a new currency widely adopted. Currencies are inherently characterized by strong network
+resistance of Bitcoin, and making it viable for use in everyday transactions. However, price-stability is not sufficient to get a new currency widely adopted. Currencies are inherently characterized by strong network
 effects: a customer is unlikely to switch over to a new currency unless
 a critical mass of merchants are ready to accept it, but at the same
 time, merchants have no reason to invest resources and educate staff
@@ -312,8 +312,8 @@ increased) a lower proportion of seigniorage is allocated to mining
 rewards, and transaction fees decrease. 
 
 Phrasing the above more formally, both the proportion of seigniorage
-that gets allocated to mining rewards wt and the adjustment in transaction
-fees ft are controlled over time as follows:
+that gets allocated to mining rewards $w_t$ and the adjustment in transaction
+fees $f_t$ are controlled over time as follows:
 
 \[
 w_{t+1}=w_{t}+\beta\left(\frac{M_{t}}{M_{t}^{*}}-1\right)+\gamma\left(\frac{TV_{t}}{TV_{t}^{*}}-1\right)
@@ -333,8 +333,8 @@ range {[}-1, 0) and will be calibrated to produce responses that are
 gradual but effective. Indicative values that have worked well in
 our simulations are between -0.5 and -1 for \textgreek{b}, \textgreek{g}
 and between -0.005 and -0.01 for \textgreek{k}, \textgreek{l} respectively.
-Both wt and ft are restricted within the range imposed by the protocol
-(between 10\% and 90\% for wt, and between 0.1\% and 2\% for ft). 
+Both $w_t$ and $f_t$ are restricted within the range imposed by the protocol
+(between 10\% and 90\% for $w_t$, and between 0.1\% and 2\% for $f_t$). 
 
 To see how this might work in practice: say that money supply is 10\%
 higher than quarterly average and transaction volume is 20\% higher
@@ -367,7 +367,7 @@ to ensure the sustainability of the economy.
 \section{Terra Platform}
 Smart contracts have enormous potential, but their use cases are limited by the price volatility of their underlying currency. The canonical function of a smart contract is to hold an escrow of tokens to be distributed when some set of conditions are triggered. Such a scheme is quite simply a futures contract, where all involved parties are forced to speculate on the price movement of the funds held by the contract. Price volatility makes smart contracts unusable for most mainstream financial applications, as most users are used to value determinate payouts in insurance, credit, mortgage, and payroll.  
 
-The introduction of a stable dApp platform will allow smart contracts to mature into a useful infrastructure for mainstream businesses. Though most dApps today issue native tokens with custom token economics, for vast majority of cases such tokens have limited use cases and fragments the overall user experience, as users today needs to sell tokens A and buy tokens B and C to interact with dApps. Terra Platform will be oriented to building financial applications that use Terra as their underlying currency.  
+The introduction of a stable dApp platform will allow smart contracts to mature into a useful infrastructure for mainstream businesses. Though most dApps today issue native tokens with custom token economics, for vast majority of cases such tokens have limited use cases and fragments the overall user experience, as users today needs to sell tokens A and buy tokens B and C to interact with dApps. Instead, the Terra Platform will be oriented to building financial applications that use Terra as their underlying currency.  
 
 Terra Platform DApps will help to drive growth and stabilize the Terra by diversifying its use cases. The protocol may therefore subsidize the growth of the more successful applications through its growth-driven fiscal policy, and we talk about this in the next section.
 
@@ -392,7 +392,7 @@ policy, with its core mandate being stimulating Terra's growth while
 ensuring its stability. In this manner, Terra achieves greater efficiency
 by returning seigniorage not allocated for stability back to its users.
 
-The Treasury main focus is the allocation of resources derived from
+The Treasury's main focus is the allocation of resources derived from
 seigniorage to decentralized application (dApp). To receive seigniorage
 from the Treasury, a dApp needs to register for consideration as an
 entity that operates on the Terra network. dApps are eligible for
@@ -451,9 +451,7 @@ The notation {*} denotes a moving average, so TV{*}\_t would be the
 moving average of transaction volume leading up to time period t,
 while \textgreek{D}TV{*}\_t would be a difference of moving averages
 of different lengths leading up to time period t. One might make the
-averaging window quarterly for example. The parameters \textgreek{k},
-\textgreek{l} are between 0 and 1 and determine the relative importance
-of the two terms being summed. Finally, the funding weights among
+averaging window quarterly for example. Finally, the funding weights among
 all dApps are scaled to sum to 1.
 \begin{itemize}
 \item \textbf{The first term} is proportional to $TV_{t}^{*}$, the average
@@ -1002,7 +1000,9 @@ The notation {*} denotes a moving average, so TV{*}\_t would be the
 moving average of transaction volume leading up to time period t,
 while \textgreek{D}TV{*}\_t would be a difference of moving averages
 of different lengths leading up to time period t. One might make the
-averaging window quarterly for example. Finally, the funding weights among
+averaging window quarterly for example. The parameters \textgreek{k},
+\textgreek{l} are between 0 and 1 and determine the relative importance
+of the two terms being summed. Finally, the funding weights among
 all dApps are scaled to sum to 1.
 \begin{itemize}
 \item \textbf{The first term} is proportional to $TV_{t}^{*}$, the average
