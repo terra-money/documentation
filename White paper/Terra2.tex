@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{pgfplots}
 \usepackage{setspace}
 \doublespacing
 \usepackage[unicode=true,
@@ -252,6 +253,7 @@ to the system and receive 1 SDR's worth of Luna.
 \item When TerraSDR's price > 1 SDR, users and arbitragers can send 1 SDR's
 worth of Luna to the system and receive 1 TerraSDR. 
 \end{itemize}
+
 The system's willingness to respect the target exchange rate irrespective
 of market conditions keeps the market exchange rate of Terra at a
 tight band around the target exchange rate. An arbitrager can benefit when 1 TerraSDR = 0.9 SDR by trading TerraSDR for 1 SDR's worth of Luna from the system, as opposed to 0.9 SDR's worth of assets she could get from the open market. Similarly, she can also benefit when 1 TerraSDR = 1.1 SDR by trading in 1 SDR’s worth of Luna to the system to get 1.1 SDR’s worth of TerraSDR, once again beating the price of the open market. 
@@ -332,7 +334,7 @@ gradual but effective. Indicative values that have worked well in
 our simulations are between -0.5 and -1 for \textgreek{b}, \textgreek{g}
 and between -0.005 and -0.01 for \textgreek{k}, \textgreek{l} respectively.
 Both wt and ft are restricted within the range imposed by the protocol
-(between 0\% and 90\% for wt, and between 0.01\% and 2\% for ft). 
+(between 10\% and 90\% for wt, and between 0.1\% and 2\% for ft). 
 
 To see how this might work in practice: say that money supply is 10\%
 higher than quarterly average and transaction volume is 20\% higher
@@ -344,7 +346,7 @@ reasonable adjustments that allocate proportionally more capital to
 the Treasury and ease the fee burden on users in response to strong
 performance of the economy.
 \begin{center}
-\includegraphics[scale=1.25]{graph_tvgap}
+\includegraphics[scale=0.42]{graph_tvgap}
 \par\end{center}
 
 Alternatively, as the graph shows, when the gap widens, i.e. as the
