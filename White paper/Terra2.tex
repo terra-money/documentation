@@ -1,0 +1,1095 @@
+%% LyX 2.3.1-1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[11pt]{article}
+\usepackage[LGR,T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{setspace}
+\doublespacing
+\usepackage[unicode=true,
+ bookmarks=false,
+ breaklinks=false,pdfborder={0 0 1},backref=section,colorlinks=true]
+ {hyperref}
+\hypersetup{pdftitle={How QE Works: Evidence on the Refinancing Channel},
+ linkcolor=black,citecolor=blue,filecolor=magenta,urlcolor=blue}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\DeclareRobustCommand{\greektext}{%
+  \fontencoding{LGR}\selectfont\def\encodingdefault{LGR}}
+\DeclareRobustCommand{\textgreek}[1]{\leavevmode{\greektext #1}}
+\ProvideTextCommand{\~}{LGR}[1]{\char126#1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{color,titling,titlesec}
+\usepackage{eurosym}
+\usepackage{harvard}\usepackage{amsfonts}
+\usepackage{graphicx,pdflscape}
+\usepackage{chicago}\setcounter{MaxMatrixCols}{30}
+\usepackage[bottom]{footmisc}
+
+% This shrinks the space before and after display formulas
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+\abovedisplayskip=5pt
+%\abovedisplayshortskip=6pt % plus 3pt
+ \belowdisplayskip=6pt
+ %\belowdisplayshortskip=7pt plus 3pt
+}{}{}
+
+% slim white space before title, section/subsection headers
+\setlength{\droptitle}{-.75in}
+\titlespacing*{\section}{0pt}{.2cm}{0pt}
+\titlespacing*{\subsection}{0pt}{.2cm}{0pt}
+
+\makeatother
+
+\begin{document}
+\title{Terra Money:\\
+Stability and Adoption}
+\author{Evan Kereiakes (evan@terra.money) \and Do Kwon (do@terra.money) \and
+Marco Di Maggio (marco@terra.money) \and Nicholas Platias (nick@terra.money)}
+\date{February 2019}
+\maketitle
+\begin{center}
+{\large{}\vspace{-1.5cm}
+}{\large\par}
+\par\end{center}
+\begin{abstract}
+\begin{singlespace}
+While many see the benefits of a price-stable cryptocurrency that
+combines the best of both fiat and Bitcoin, not many have a clear
+plan to get such a currency adopted. Since the value of a currency
+as medium of exchange is mainly driven by its network effects, a successful
+new digital currency needs to maximize adoption in order to become
+useful. We propose a cryptocurrency, Terra, which is both price-stable
+and growth-driven. It achieves price-stability via an elastic money
+supply enabled by countercyclical mining incentives and transaction
+fees. It also uses seigniorage created by its minting operations as
+transaction stimulus, thereby facilitating adoption. There is demand
+for a decentralized, price-stable money protocol in both fiat and
+blockchain economies. If such a protocol succeeds, then it will have
+a significant impact as the best use case for cryptocurrencies.
+\end{singlespace}
+\end{abstract}
+\thispagestyle{empty}
+
+\newpage\setcounter{page}{1}
+
+\section{Introduction}
+
+The price-volatility of cryptocurrencies is a well-studied problem
+by both academics and market observers (see for instance, Liu and
+Tsyvinski, 2018, Makarov and Schoar, 2018). Most cryptocurrencies,
+including Bitcoin, have a predetermined issuance schedule that, together
+with a strong speculative demand, contributes to wild fluctuations
+in price. Bitcoin\textquoteright s extreme price volatility is a major
+roadblock towards its adoption as a medium of exchange or store of
+value. Intuitively, nobody wants to pay with a currency that has the
+potential to double in value in a few days, or wants to be paid in
+the currency if its value can significantly decline before the transaction
+is settled. The problems are aggravated when the transaction requires
+more time, e.g. for deferred payments such as mortgages or employment
+contracts, as volatility would severely disadvantage one side of the
+contract, making the usage of existing digital currencies in these
+settings prohibitively expensive. 
+
+At the core of how the Terra Protocol
+solves these issues is the idea that a cryptocurrency with an elastic
+monetary policy would stabilize its price, retaining all the censorship
+resistance of Bitcoin, and making it viable for use in everyday transactions.However, price-stability is not sufficient to get a new currency widely adopted. Currencies are inherently characterized by strong network
+effects: a customer is unlikely to switch over to a new currency unless
+a critical mass of merchants are ready to accept it, but at the same
+time, merchants have no reason to invest resources and educate staff
+to accept a new currency unless there is significant customer demand
+for it. For this reason, Bitcoin\textquoteright s adoption in the
+payments space has been limited to small businesses whose owners are
+personally invested in cryptocurrencies. Our belief is that while
+an elastic monetary policy is the solution to the stability problem,
+an efficient fiscal policy can drive adoption. Then, the Terra Protocol
+also offers strong incentives for users to join the network with an
+efficient fiscal spending regime, managed by a Treasury, where multiple
+stimulus programs compete for financing. That is, proposals from community
+participants will be vetted by the rest of the ecosystem and, when
+approved, they will be financed with the objective to increase adoption
+and expand the potential use cases. 
+
+The Terra Protocol with its balance
+between fostering stability and adoption represents a meaningful complement
+to fiat currencies as means of payment, and store of value. The rest
+of the paper is organized as follows. We first discuss the protocol
+and how stability is achieved and maintained, through the calibration
+of miners\textquoteright{} demand and the use of the native mining
+Luna token. We then dig deeper in how countercyclical incentives and
+fees are adopted to smooth fluctuations. Second, we discuss how Terra\textquoteright s
+fiscal policy can be used as an efficient stimulus to drive adoption. 
+
+\section{Multi-fiat peg monetary policy }
+
+A stable-coin mechanism must answer three key questions: 
+\begin{itemize}
+\item \textbf{How is price-stability defined?} Stability is a relative concept;
+which asset should a stable-coin be pegged to in order to appeal to
+the broadest possible audience? 
+\item \textbf{How is price-stability measured?} Coin price is exogenous
+to the Terra blockchain, and an efficient, corruption-resistant price
+feed is necessary for the system to function properly. 
+\item \textbf{How is price-stability achieved?} When coin price has deviated
+from the target, the system needs a way to apply pressures to the
+market to bring price back to the target. 
+\end{itemize}
+This section will specify Terra\textquoteright s answers to the above
+questions in detail. 
+
+\subsection{Defining stability against regional fiat currencies }
+
+The existential objective of a stable-coin is to retain its purchasing
+power. Given that most goods and services are consumed domestically,
+it is important to create crypto-currencies that track the value of
+local fiat currencies. Though the US Dollar dominates international
+trade and forex operations, to the average consumer the dollar exhibits
+unacceptable volatility against her choice unit of account. 
+
+Recognizing strong regionalities in money, Terra aims to be a family of cryptocurrencies that are each pegged to the world's major currencies. Close to genesis, the protocol will issue Terra currencies pegged to USD, EUR, CNY, JPY, GBP, KRW, and the IMF SDR. Over time, more currencies will be added to the list by user voting. TerraSDR will be the flagship currency of this family, given that it exhibits the lowest volatility against any one fiat currency (Keriakes, 2018). TerraSDR be the currency in which transaction fees, miner rewards and stimulus grants will be denominated.
+
+It is important, however, for Terra currencies to have access to shared liquidity. For this reason, the system supports atomic swaps among Terra currencies at their market exchange rates. A user can swap TerraKRW for TerraUSD instantly at the effective KRW/USD exchange rate. This allows all Terra currencies to share liquidity and macroeconomic fluctuations; a fall in demand by one currency can quickly be absorbed by the others. We can therefore reason about the stability of Terra currencies in a group; we will be referring to Terra loosely as a single currency for the remainder of this paper. As Terra's ecosystem adds more currencies, its atomic swap functionality can be an instant solution to cross border transactions, international trade settlements and usurious capital controls. 
+
+
+
+
+\subsection{Measuring stability with miner oracles }
+
+Since the price of Terra currencies in secondary markets is exogenous to the blockchain, the system must rely on a decentralized price oracle to estimate the true exchange rate. We define the mechanism for the price oracle as the following: 
+
+\begin{itemize}
+\item For any Terra sub-currency in the set of currencies C = {TerraKRW, TerraUSD, TerraSDR... } miners submit a vote for what they believe to be the current exchange rate in the target fiat asset. 
+\item Every n blocks the vote is tallied by taking the weighted medians as the true rates.   
+\item Some amount of Terra is rewarded to those who voted within 1 standard deviation of the elected median. Those who voted outside may be punished via slashing of their stakes. The ratio of those that are punished and rewarded may be calibrated by the system every vote to ensure that a sufficiently large portion of the miners vote.
+\end{itemize}
+
+Several issues have been raised in implementing decentralized oracles, but chief among them is the possibility for voters to profit by coordinating on a false price vote. Limiting the vote to a specific subset of users with strong vested interest in the system, the miners, can vastly decrease the odds of such a coordination. A successful coordination event on the price oracle would result in a much higher loss in the value of the miner stakes than any potential gains, as Luna stakes are time-bound to the system.  
+
+The oracle can also play a role in adding and deprecating Terra currencies. The protocol may start supporting a new Terra currency when oracle votes for it satisfies a submission threshold. Similarly, the failure to receive a sufficient number of oracle votes for several periods could trigger the deprecation of a Terra currency. 
+
+
+\subsection{Achieving stability through countercyclical mining }
+
+Once the system has detected that the price of a Terra currency has
+deviated from its peg, it must apply pressures to normalize the price.
+Like any other market, the Terra money market follows simple rules
+of supply and demand for a pegged currency. That is: 
+\begin{itemize}
+\item Contracting money supply, all conditions held equal, will result in
+higher relative price levels. That is, when price levels are falling
+below the target, reducing money supply sufficiently will return price
+levels to normalcy. 
+\item Expanding money supply, all conditions held equal, will result in
+lower relative price levels. That is, when price levels are rising
+above the target, increasing money supply sufficiently will return
+price levels to normalcy. 
+\end{itemize}
+Of course, contracting the supply of money isn\textquoteright t free;
+like any other asset, money needs to be bought from the market. Central
+banks and governments shoulder contractionary costs for pegged fiat
+systems through a variety of mechanisms including intervention, the
+issuance of bonds and short-term instruments thus incurring costs
+of interest, and hiking of money market rates and reserve ratio requirements
+thus losing revenue. Put in a different way, central banks and governments
+absorb the volatility of the pegged currencies they issue. 
+
+Analogously, Terra miners absorb volatility in Terra supply. 
+\begin{itemize}
+\item \textbf{In the short term, miners absorb Terra contraction costs}
+through mining power dilution. During a contraction, the system mints
+and auctions more mining power to buy back and burn Terra. This effectively
+contracts the supply of Terra until its price has returned to the
+peg, and temporarily results in mining power dilution. 
+\item \textbf{In the mid to long term, miners are compensated with increased
+mining rewards}. First, the system continues to buy back mining power
+until a fixed target supply is reached, thereby creating long-run
+dependability in available mining power. Second, the system increases
+mining rewards, which will be explained in more detail in a later
+section. 
+\end{itemize}
+In summary, miners bear the costs of Terra volatility in the short
+term, while being compensated for it in the long-term. Compared to
+ordinary users, miners have a long-term vested interest in the stability
+of the system, with invested infrastructure, trained staff and business
+models with high switching cost. The remainder of this section will
+discuss how the system forwards short-term volatility and creates
+long-term incentives for Terra miners. 
+
+\subsection{Miners absorb short-term Terra volatility }
+
+The Terra Protocol runs on a Proof of Stake (PoS) blockchain, where
+miners need to stake a native cryptocurrency Luna to mine Terra transactions.
+At every block period, the protocol elects among the set of staked
+miners a block producer, which is entrusted with the work required
+to produce the next block by aggregating transactions, achieving consensus
+among miners, and ensuring that messages are distributed properly
+in a short timeframe with high fault tolerance. 
+
+The block producer election is weighted by the size of the active
+miner\textquoteright s Luna stake. Therefore, \textbf{Luna represents
+mining power in the Terra network.} Similar to how a Bitcoin miner\textquoteright s
+hash power represents a pro-rata odds of generating Bitcoin blocks,
+the Luna stake represents pro-rata odds of generating Terra blocks. 
+
+Luna also serves as the most immediate defense against Terra price
+fluctuations. The system uses Luna to make the price for Terra by
+agreeing to be counter-party to anyone looking to swap Terra and Luna
+at Terra's target exchange rate. More concretely: 
+\begin{itemize}
+\item When TerraSDR's price < 1 SDR, users and arbitragers can send 1 TerraSDR
+to the system and receive 1 SDR's worth of Luna. 
+\item When TerraSDR's price > 1 SDR, users and arbitragers can send 1 SDR's
+worth of Luna to the system and receive 1 TerraSDR. 
+\end{itemize}
+The system's willingness to respect the target exchange rate irrespective
+of market conditions keeps the market exchange rate of Terra at a
+tight band around the target exchange rate. An arbitrager can benefit when 1 TerraSDR = 0.9 SDR by trading TerraSDR for 1 SDR's worth of Luna from the system, as opposed to 0.9 SDR's worth of assets she could get from the open market. Similarly, she can also benefit when 1 TerraSDR = 1.1 SDR by trading in 1 SDR’s worth of Luna to the system to get 1.1 SDR’s worth of TerraSDR, once again beating the price of the open market. 
+
+The system finances Terra price making via Luna: 
+\begin{itemize}
+\item To buy 1 TerraSDR, the protocol mints and sells Luna worth 1 SDR 
+\item By selling 1 TerraSDR, the protocol earns Luna worth 1 SDR 
+\end{itemize}
+As Luna is minted to match Terra offers, volatility is moved from
+Terra price to Luna supply. If unmitigated, this Luna dilution presents
+a problem for miners; their Luna stakes are worth a smaller portion
+of total available mining power post-contraction. The system
+burns a portion of the Luna it has earned during expansions until
+Luna supply has reached its 1 billion equilibrium issuance. Therefore,
+Luna can have steady demand as a token with pro-rata rights to Terra
+mining over the long term. The next section discusses how the system
+offers countercyclical mining incentives to keep the market for mining
+and demand for Luna long-term stable through volatile macroeconomic
+cycles. 
+
+\subsection{Countercyclical Mining Rewards }
+
+Our objective is to counteract fluctuations in the value of mining
+Terra by calibrating mining rewards to be countercyclical. The main
+intuition behind a countercyclical policy is that it attempts to counteract
+economic cycles by increasing mining rewards during recessions and
+decreasing mining rewards during booms. The protocol has two levers
+at its disposal to calibrate mining rewards: transaction fees, and
+the proportion of seigniorage that gets allocated to miners. 
+\begin{itemize}
+\item Transaction fees: The protocol levies a small fee from every Terra
+transaction to reward miners. Fees default to 0.1\% but may vary over
+time to smooth out mining rewards. If mining rewards are declining,
+an increase in fees can reverse that trend. Conversely, high mining
+rewards give the protocol leeway to bring fees down. Fees are capped
+at 2\%, so they are restricted to a range that does not exceed the
+fees paid to traditional payment processors. 
+\item Seigniorage: Users can mint Terra by paying the system Luna. This
+Luna earned by the system is seigniorage, the value of newly minted
+currency minus the cost of issuance. The system burns a portion of
+seigniorage, which makes mining power scarcer and reduces mining competition.
+The remaining portion of seigniorage goes to the Treasury to finance
+fiscal stimulus. The system can calibrate the allocation of seigniorage
+between those two destinations to impact mining reward profiles. 
+\end{itemize}
+We use two key macroeconomic indicators as inputs for controlling
+mining rewards: money supply and transaction volume. Those two indicators
+are important signals for the performance of the economy. Looking
+at the equation for mining rewards: when the economy underperforms
+relative to recent history (money supply and transaction volume have
+decreased) a higher proportion of seigniorage is allocated to mining
+rewards, and transaction fees increase; conversely, when the economy
+outperforms recent history (money supply and transaction volume have
+increased) a lower proportion of seigniorage is allocated to mining
+rewards, and transaction fees decrease. 
+
+Phrasing the above more formally, both the proportion of seigniorage
+that gets allocated to mining rewards wt and the adjustment in transaction
+fees ft are controlled over time as follows:
+
+\[
+w_{t+1}=w_{t}+\beta\left(\frac{M_{t}}{M_{t}^{*}}-1\right)+\gamma\left(\frac{TV_{t}}{TV_{t}^{*}}-1\right)
+\]
+
+\[
+f_{t+1}=f_{t}+\kappa\left(\frac{M_{t}}{M_{t}^{*}}-1\right)+\lambda\left(\frac{TV_{t}}{TV_{t}^{*}}-1\right)
+\]
+
+In the above $M_{t}$ is Terra money supply at time $t$, $M_{t}^{*}$
+is the historical moving average of money supply over the previous
+quarter, $TV_{t}$ is Terra transaction volume at time $t$ and $TV_{t}^{*}$
+is correspondingly the historical moving average of transaction volume
+over the previous quarter. The parameters \textgreek{b}, \textgreek{g},
+\textgreek{k} and \textgreek{l} are all negative real numbers in the
+range {[}-1, 0) and will be calibrated to produce responses that are
+gradual but effective. Indicative values that have worked well in
+our simulations are between -0.5 and -1 for \textgreek{b}, \textgreek{g}
+and between -0.005 and -0.01 for \textgreek{k}, \textgreek{l} respectively.
+Both wt and ft are restricted within the range imposed by the protocol
+(between 0\% and 90\% for wt, and between 0.01\% and 2\% for ft). 
+
+To see how this might work in practice: say that money supply is 10\%
+higher than quarterly average and transaction volume is 20\% higher
+than quarterly average. Let \textgreek{b}, \textgreek{g} be -0.5 and
+\textgreek{k}, \textgreek{l} be -0.01 respectively. The seigniorage
+allocation weight to mining rewards would decrease by 15\% and transaction
+fees would decrease by 0.3\% (both on an absolute basis). These are
+reasonable adjustments that allocate proportionally more capital to
+the Treasury and ease the fee burden on users in response to strong
+performance of the economy.
+\begin{center}
+\includegraphics[scale=1.25]{graph_tvgap}
+\par\end{center}
+
+Alternatively, as the graph shows, when the gap widens, i.e. as the
+economy shrinks, the fees will increase from the example starting
+point of 0.1\% to the maximum of 2\% that will still make Terra more
+convenient than Visa and Mastercard. 
+
+The rule we have outlined for making mining rewards countercyclical
+is simple, intuitive and easily programmable. It takes inspiration
+from Taylor\textquoteright s Rule (Taylor, 1993), utilized by monetary
+authorities banks to help frame the level of nominal interest rates
+as a function of inflation and output. Similarly, exactly as a central
+bank, the protocol observes the health of the economy, in our case
+the money supply and transaction volume, and adjusts its main levers
+to ensure the sustainability of the economy.
+
+
+\section{Terra Platform}
+Smart contracts have enormous potential, but their use cases are limited by the price volatility of their underlying currency. The canonical function of a smart contract is to hold an escrow of tokens to be distributed when some set of conditions are triggered. Such a scheme is quite simply a futures contract, where all involved parties are forced to speculate on the price movement of the funds held by the contract. Price volatility makes smart contracts unusable for most mainstream financial applications, as most users are used to value determinate payouts in insurance, credit, mortgage, and payroll.  
+
+The introduction of a stable dApp platform will allow smart contracts to mature into a useful infrastructure for mainstream businesses. Though most dApps today issue native tokens with custom token economics, for vast majority of cases such tokens have limited use cases and fragments the overall user experience, as users today needs to sell tokens A and buy tokens B and C to interact with dApps. Terra Platform will be oriented to building financial applications that use Terra as their underlying currency.  
+
+Terra Platform DApps will help to drive growth and stabilize the Terra by diversifying its use cases. The protocol may therefore subsidize the growth of the more successful applications through its growth-driven fiscal policy, and we talk about this in the next section.
+
+
+\section{Growth-driven fiscal policy}
+
+National governments use expansionary fiscal spending with the objective
+of stimulating growth. On the balance, the hope of fiscal spending
+is that the economic activity instigated by the original spending
+results in a feedback loop that grows the economy more than the amount
+of money spent in the initial stimulus. This concept is captured by
+the spending multiplier \textemdash{} how many dollars of economic
+activity does one dollar of fiscal spending generate? The spending
+multiplier increases with the marginal propensity to consume, meaning
+that the effectiveness of the expansionary stimulus is directly related
+to how likely economic agents are to increase their spending. 
+
+In a previous section, we discussed how Terra seigniorage is directed
+to both miner rewards and the Treasury. At this point, it is worth
+describing how exactly the Treasury implements Terra's fiscal spending
+policy, with its core mandate being stimulating Terra's growth while
+ensuring its stability. In this manner, Terra achieves greater efficiency
+by returning seigniorage not allocated for stability back to its users.
+
+The Treasury main focus is the allocation of resources derived from
+seigniorage to decentralized application (dApp). To receive seigniorage
+from the Treasury, a dApp needs to register for consideration as an
+entity that operates on the Terra network. dApps are eligible for
+funding depending on their economic activity and use of funding. A
+dApp registers a wallet with the network that is used to track economic
+activity. Transactions that go through the wallet count towards the
+dApp's transaction volume.
+
+The funding procedure for a dApp works as follows: 
+\begin{itemize}
+\item A dApp applies for an account with the Treasury; the application includes
+metadata such as the Title, a url leading to a detailed page regarding
+the use of funding, the wallet address of the applicant, as well as
+auditing and governance procedures. 
+\item At regular voting intervals, Luna validators vote to accept or reject
+new dApp applications for Treasury accounts. The net number of votes
+(yes votes minus no votes) needs to exceed 1/3 of total available
+validator power for an application to be accepted.
+\item Luna validators may only exercise control over which dApps can open
+accounts with the Treasury. The funding itself is determined programmatically
+for each funding period by a weight that is assigned to each dApp.
+This allows the Treasury to prioritize dApps that earn the most funding. 
+\item At each voting session, Luna validators have the right to request
+that a dApp be blacklisted, for example because it behaves dishonestly
+or fails to account for its use of Treasury funds. Again, the net
+number of votes (yes votes minus no votes) needs to exceed 1/3 of
+total available validator power for the blacklist to be enforced.
+A blacklisted dApp loses access to its Treasury account and is no
+longer eligible for funding.
+\end{itemize}
+The motivation behind assigning funding weights to dApps is to maximize
+the impact of the stimulus on the economy by rewarding the dApps that
+are more likely to have a positive effect on the economy. The Treasury
+uses two criteria for allocating spending: (1) \textbf{robust economic
+activity} and (2) \textbf{efficient use of funding}. dApps with a
+strong track record of adoption receive support for their continued
+success, and dApps that have grown relative to their funding are rewarded
+with more seigniorage, as they have a successful track record of efficiently
+using their resources. 
+
+Those two criteria are combined into a single weight which determines
+the relative funding that dApps receive from the aggregate funding
+pool. For instance, a dApp with a weight of 2 would receive twice
+the amount of funding of a dApp with a weight of 1.
+
+We lay out the funding weight equation, followed by a detailed explanation
+of all the parts: For a time period t, let TV\_t be a dApp's transaction
+volume and F\_t be the Treasury funding received. Then we determine
+the funding weight $w_{t}$ for the period as follows:
+
+\[
+w_{t}=\left(1-\lambda\right)TV_{t}^{*}+\lambda\frac{\Delta TV_{t}^{*}}{F_{t-1}^{*}}
+\]
+
+The notation {*} denotes a moving average, so TV{*}\_t would be the
+moving average of transaction volume leading up to time period t,
+while \textgreek{D}TV{*}\_t would be a difference of moving averages
+of different lengths leading up to time period t. One might make the
+averaging window quarterly for example. The parameters \textgreek{k},
+\textgreek{l} are between 0 and 1 and determine the relative importance
+of the two terms being summed. Finally, the funding weights among
+all dApps are scaled to sum to 1.
+\begin{itemize}
+\item \textbf{The first term} is proportional to $TV_{t}^{*}$, the average
+transaction volume generated by the dApp in the recent past. This
+is an indicator of the dApp's \textbf{economic activity}, or more
+simply the size of its micro-economy.
+\item \textbf{The second term} is proportional to $\Delta TV*_{t}/F*_{t}-1$.
+The numerator describes the trend in transaction volume \textemdash{}
+it is the difference between a more and a less recent average. When
+positive, it means that the transaction volume is following an upward
+trajectory and vice versa. The denominator is the average funding
+amount received by the dApp in the recent past, up to and including
+the previous period. So the second term describes how economic activity
+is changing relative to past funding. Overall, larger values of this
+ratio capture instances where the dApp is fast-growing for each dollar
+of funding it has received. This is in fact the spending multiplier
+of the funding program, a prime indicator of \textbf{funding efficiency}. 
+\item The parameter \textgreek{l} is used to determine the relative importance
+of economic activity and funding efficiency. If it isset equal to
+1/2 then the two terms would have equal contribution. By decreasing
+the value of \textgreek{l}, the protocol can favor more heavily dApps
+with larger economies. Conversely, by increasing the value of \textgreek{l}
+the protocol can favor dApps that are using funding with high efficiency,
+for example by growing fast with little funding, even if they are
+smaller in size.
+\end{itemize}
+The votes on registering and blacklisting a dApp serve to minimize
+the risk that the above system is gamed during its infancy. It is
+the responsibility of Luna validators to hold dApps accountable for
+dishonest behavior and blacklist them if necessary. As the economy
+grows and becomes more decentralized, the bar to register and blacklist
+an App can be adjusted.
+
+An important advantage of distributing funding in a programmatic way
+is that it is simpler, objective, transparent and streamlined compared
+to open-ended voting systems. In fact, compared to decentralized voting
+systems, it is more predictable, because the inputs used to compute
+the funding weights are transparent and slow moving. Furthermore,
+this system requires less trust in Luna validators, given that the
+only authority they are vested with is determining whether or not
+a dApp is honest and makes legitimate use of funding.
+
+Overall, the objective of Terra governance is simple: fund the organizations
+and proposals with the highest net impact on the economy. This will
+include dApps solving real problems for users, increasing Terra's
+adoption and as a result increasing the GDP of the Terra economy. 
+
+\section{Conclusion}
+
+We have presented Terra, a stable digital currency that is designed
+to complement both existing fiat and cryptocurrencies as a way to
+transact and store value. The protocol adjusts the supply of Terra
+in response to changes in demand to keep its price stable. This is
+achieved using Luna, the mining token whose countercyclical rewards
+are designed to absorb volatility from changing economic cycles. Terra
+also achieves efficient adoption by returning seigniorage not invested
+in stability back to its users. Its transparent and democratic distribution
+mechanism gives dApps the power to attract and retain users by tapping
+into Terra's economic growth. 
+
+If Bitcoin\textquoteright s contribution to cryptocurrency was immutability,
+and Ethereum expressivity, our value-add will be usability. The potential
+applications of Terra are immense. Immediately, we foresee Terra being
+used as a medium-of-exchange in online payments, allowing people to
+transact freely at a fraction of the fees charged by other payment
+methods. As the world starts to become more and more decentralized,
+we see Terra being used as a dApp platform where price-stable token
+economies are built on Terra. Terra is looking to become the first
+usable currency and stability platform on the blockchain, unlocking
+the power of decentralization for mainstream users, merchants, and
+developers.
+
+\noindent {\small{}\newpage}\textbf{\small{}References }{\small\par}
+
+\noindent {\small{}Liu, Yukun and Tsyvinski, Aleh, Risks and Returns
+of Cryptocurrency (August 2018). NBER Working Paper No. w24877. Available
+at https://ssrn.com/abstract=3226806. }{\small\par}
+
+\noindent {\small{}Makarov, Igor and Schoar, Antoinette, Trading and
+Arbitrage in Cryptocurrency Markets (April 30, 2018). Available at
+SSRN: https://ssrn.com/abstract=3171204. }{\small\par}
+
+\noindent {\small{}Kereiakes, Evan, Rationale for Including Multiple
+Fiat Currencies in Terra\textquoteright s Peg (November 2018). Available
+at https://medium.com/terra-money/rationale-for-including-multiple-fiat-currencies-in-terras-peg-1ea9eae9de2a }{\small\par}
+
+\noindent {\small{}Taylor, John B. (1993). \textquotedbl Discretion
+versus Policy Rules in Practice.\textquotedbl{} Carnegie-Rochester
+Conference Series on Public Policy. 39: 195\textendash 214. }{\small\par}
+\end{document}
+%% LyX 2.3.1-1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[12pt]{article}
+\usepackage[LGR,T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{setspace}
+\doublespacing
+\usepackage[unicode=true,
+ bookmarks=false,
+ breaklinks=false,pdfborder={0 0 1},backref=section,colorlinks=true]
+ {hyperref}
+\hypersetup{pdftitle={How QE Works: Evidence on the Refinancing Channel},
+ linkcolor=black,citecolor=blue,filecolor=magenta,urlcolor=blue}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\DeclareRobustCommand{\greektext}{%
+  \fontencoding{LGR}\selectfont\def\encodingdefault{LGR}}
+\DeclareRobustCommand{\textgreek}[1]{\leavevmode{\greektext #1}}
+\ProvideTextCommand{\~}{LGR}[1]{\char126#1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{color,titling,titlesec}
+\usepackage{eurosym}
+\usepackage{harvard}\usepackage{amsfonts}
+\usepackage{graphicx,pdflscape}
+\usepackage{chicago}\setcounter{MaxMatrixCols}{30}
+\usepackage[bottom]{footmisc}
+
+% This shrinks the space before and after display formulas
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+\abovedisplayskip=5pt
+%\abovedisplayshortskip=6pt % plus 3pt
+ \belowdisplayskip=6pt
+ %\belowdisplayshortskip=7pt plus 3pt
+}{}{}
+
+% slim white space before title, section/subsection headers
+\setlength{\droptitle}{-.75in}
+\titlespacing*{\section}{0pt}{.2cm}{0pt}
+\titlespacing*{\subsection}{0pt}{.2cm}{0pt}
+
+\makeatother
+
+\begin{document}
+\title{Terra Money:\\
+Stability and Adoption}
+\author{Evan Kereiakes (evan@terra.money) \and Do Kwon (do@terra.money) \and
+Marco Di Maggio (marco@terra.money) \and Nicholas Platias (nick@terra.money)}
+\date{February 2019}
+\maketitle
+\begin{center}
+{\large{}\vspace{-1.5cm}
+}{\large\par}
+\par\end{center}
+\begin{abstract}
+\begin{singlespace}
+While many see the benefits of a price-stable cryptocurrency that
+combines the best of both fiat and Bitcoin, not many have a clear
+plan to get such a currency adopted. Since the value of a currency
+as medium of exchange is mainly driven by its network effects, a successful
+new digital currency needs to maximize adoption in order to become
+useful. We propose a cryptocurrency, Terra, which is both price-stable
+and growth-driven. It achieves price-stability via an elastic money
+supply enabled by countercyclical mining incentives and transaction
+fees. It also uses seigniorage created by its minting operations as
+transaction stimulus, thereby facilitating adoption. There is demand
+for a decentralized, price-stable money protocol in both fiat and
+blockchain economies. If such a protocol succeeds, then it will have
+a significant impact as the best use case for cryptocurrencies.
+\end{singlespace}
+\end{abstract}
+\thispagestyle{empty}
+
+\newpage\setcounter{page}{1}
+
+\section{Introduction}
+
+The price-volatility of cryptocurrencies is a well-studied problem
+by both academics and market observers (see for instance, Liu and
+Tsyvinski, 2018, Makarov and Schoar, 2018). Most cryptocurrencies,
+including Bitcoin, have a predetermined issuance schedule that, together
+with a strong speculative demand, contributes to wild fluctuations
+in price. Bitcoin\textquoteright s extreme price volatility is a major
+roadblock towards its adoption as a medium of exchange or store of
+value. Intuitively, nobody wants to pay with a currency that has the
+potential to double in value in a few days, or wants to be paid in
+the currency if its value can significantly decline before the transaction
+is settled. The problems are aggravated when the transaction requires
+more time, e.g. for deferred payments such as mortgages or employment
+contracts, as volatility would severely disadvantage one side of the
+contract, making the usage of existing digital currencies in these
+settings prohibitively expensive. At the core of how the Terra Protocol
+solves these issues is the idea that a cryptocurrency with an elastic
+monetary policy would stabilize its price, retaining all the censorship
+resistance of Bitcoin, and making it viable for use in everyday transactions.
+However, price-stability is not sufficient to get a new currency widely
+adopted. Currencies are inherently characterized by strong network
+effects: a customer is unlikely to switch over to a new currency unless
+a critical mass of merchants are ready to accept it, but at the same
+time, merchants have no reason to invest resources and educate staff
+to accept a new currency unless there is significant customer demand
+for it. For this reason, Bitcoin\textquoteright s adoption in the
+payments space has been limited to small businesses whose owners are
+personally invested in cryptocurrencies. Our belief is that while
+an elastic monetary policy is the solution to the stability problem,
+an efficient fiscal policy can drive adoption. Then, the Terra Protocol
+also offers strong incentives for users to join the network with an
+efficient fiscal spending regime, managed by a Treasury, where multiple
+stimulus programs compete for financing. That is, proposals from community
+participants will be vetted by the rest of the ecosystem and, when
+approved, they will be financed with the objective to increase adoption
+and expand the potential use cases. The Terra Protocol with its balance
+between fostering stability and adoption represents a meaningful complement
+to fiat currencies as means of payment, and store of value. The rest
+of the paper is organized as follows. We first discuss the protocol
+and how stability is achieved and maintained, through the calibration
+of miners\textquoteright{} demand and the use of the native mining
+Luna token. We then dig deeper in how countercyclical incentives and
+fees are adopted to smooth fluctuations. Second, we discuss how Terra\textquoteright s
+fiscal policy can be used as an efficient stimulus to drive adoption. 
+
+\section{Multi-fiat peg monetary policy }
+
+A stable-coin mechanism must answer three key questions: 
+\begin{itemize}
+\item \textbf{How is price-stability defined?} Stability is a relative concept;
+which asset should a stable-coin be pegged to in order to appeal to
+the broadest possible audience? 
+\item \textbf{How is price-stability measured?} Coin price is exogenous
+to the Terra blockchain, and an efficient, corruption-resistant price
+feed is necessary for the system to function properly. 
+\item \textbf{How is price-stability achieved?} When coin price has deviated
+from the target, the system needs a way to apply pressures to the
+market to bring price back to the target. 
+\end{itemize}
+This section will specify Terra\textquoteright s answers to the above
+questions in detail. 
+
+\subsection{Defining stability against regional fiat currencies }
+
+The existential objective of a stable-coin is to retain its purchasing
+power. Given that most goods and services are consumed domestically,
+it is important to create crypto-currencies that track the value of
+local fiat currencies. Though the US Dollar dominates international
+trade and forex operations, to the average consumer the dollar exhibits
+unacceptable volatility against her choice unit of account. 
+
+Recognizing strong regionalities in money, Terra aims to be a family
+of cryptocurrencies that are each pegged to the world's major currencies.
+Close to genesis, the protocol will issue Terra currencies pegged
+to USD, EUR, CNY, JPY, GBP, KRW, and the IMF SDR. Over time, more
+currencies will be added to the list by user voting. TerraSDR will
+be the flagship currency of this family, given that it exhibits the
+lowest volatility against any one fiat currency (Kereiakes, 2018).
+TerraSDR be the currency in which payment of transaction fees, disbursements
+of miner rewards and fiscal spending will be denominated.
+
+\subsection{Measuring stability with miner oracles }
+
+Since the price of Terra currencies in secondary markets is exogenous
+to the blockchain, the system must rely on a decentralized price oracle
+to estimate the true exchange rate. We define the mechanism for the
+price oracle as the following: 
+\begin{itemize}
+\item For any Terra sub-currency in the set of currencies C = \{TerraKRW,
+TerraUSD, TerraSDR... \} miners submit a vote for what they believe
+to be the current exchange rate between the sub-currency and its target
+fiat asset. To prevent front-running, voters submit a hash of the
+price value instead of the price itself. 
+\item Every n blocks the vote is tallied by having voters submit a solution
+to the vote hash. The weighted median of the votes is taken for both
+the target and observed exchange rates as the true rates. 
+\item Some amount of Terra is rewarded to those who voted within 1 standard
+deviation of the elected median. Those who voted outside may be punished
+via slashing of their stakes. The ratio of those that are punished
+and rewarded may be calibrated by the system every vote to ensure
+that a sufficiently large portion of the miners vote. 
+\end{itemize}
+Several issues have been raised in implementing decentralized oracles,
+but chief among them is the possibility for voters to profit by coordinating
+on a false price vote. Limiting the vote to a specific subset of users
+with strong vested interest in the system, the miners, can vastly
+decrease the odds of such a coordination. A successful coordination
+event on the price oracle would result in a much higher loss in the
+value of the miner stakes than any potential gains of a successful
+coordination. 
+
+\subsection{Achieving stability through countercyclical mining }
+
+Once the system has detected that the price of a Terra currency has
+deviated from its peg, it must apply pressures to normalize the price.
+Like any other market, the Terra money market follows simple rules
+of supply and demand for a pegged currency. That is: 
+\begin{itemize}
+\item Contracting money supply, all conditions held equal, will result in
+higher relative price levels. That is, when price levels are falling
+below the target, reducing money supply sufficiently will return price
+levels to normalcy. 
+\item Expanding money supply, all conditions held equal, will result in
+lower relative price levels. That is, when price levels are rising
+above the target, increasing money supply sufficiently will return
+price levels to normalcy. 
+\end{itemize}
+Of course, contracting the supply of money isn\textquoteright t free;
+like any other asset, money needs to be bought from the market. Central
+banks and governments shoulder contractionary costs for pegged fiat
+systems through a variety of mechanisms including intervention, the
+issuance of bonds and short-term instruments thus incurring costs
+of interest, and hiking of money market rates and reserve ratio requirements
+thus losing revenue. Put in a different way, central banks and governments
+absorb the volatility of the pegged currencies they issue. 
+
+Analogously, Terra miners absorb volatility in Terra supply. 
+\begin{itemize}
+\item \textbf{In the short term, miners absorb Terra contraction costs}
+through mining power dilution. During a contraction, the system mints
+and auctions more mining power to buy back and burn Terra. This effectively
+contracts the supply of Terra until its price has returned to the
+peg, and temporarily results in mining power dilution. 
+\item \textbf{In the mid to long term, miners are compensated with increased
+mining rewards}. First, the system continues to buy back mining power
+until a fixed target supply is reached, thereby creating long-run
+dependability in available mining power. Second, the system increases
+mining rewards, which will be explained in more detail in a later
+section. 
+\end{itemize}
+In summary, miners bear the costs of Terra volatility in the short
+term, while being compensated for it in the long-term. Compared to
+ordinary users, miners have a long-term vested interest in the stability
+of the system, with invested infrastructure, trained staff and business
+models with high switching cost. The remainder of this section will
+discuss how the system forwards short-term volatility and creates
+long-term incentives for Terra miners. 
+
+\subsection{Miners absorb short-term Terra volatility }
+
+The Terra Protocol runs on a Proof of Stake (PoS) blockchain, where
+miners need to stake a native cryptocurrency Luna to mine Terra transactions.
+At every block period, the protocol elects among the set of staked
+miners a block producer, which is entrusted with the work required
+to produce the next block by aggregating transactions, achieving consensus
+among miners, and ensuring that messages are distributed properly
+in a short timeframe with high fault tolerance. 
+
+The block producer election is weighted by the size of the active
+miner\textquoteright s Luna stake. Therefore, \textbf{Luna represents
+mining power in the Terra network.} Similar to how a Bitcoin miner\textquoteright s
+hash power represents a pro-rata odds of generating Bitcoin blocks,
+the Luna stake represents pro-rata odds of generating Terra blocks. 
+
+Luna also serves as the most immediate defense against Terra price
+fluctuations. The system uses Luna to make the price for Terra by
+agreeing to be counter-party to anyone looking to swap Terra and Luna
+at Terra's target exchange rate. More concretely: 
+\begin{itemize}
+\item When TerraSDR's price < 1 SDR, users and arbitragers can send 1 TerraSDR
+to the system and receive 1 SDR's worth of Luna. 
+\item When TerraSDR's price > 1 SDR, users and arbitragers can send 1 SDR's
+worth of Luna to the system and receive 1 TerraSDR. 
+\end{itemize}
+The system's willingness to respect the target exchange rate irrespective
+of market conditions keeps the market exchange rate of Terra at a
+tight band around the target exchange rate. 
+
+The system finances Terra price making via Luna: 
+\begin{itemize}
+\item To buy 1 TerraSDR, the protocol mints and sells Luna worth 1 SDR 
+\item By selling 1 TerraSDR, the protocol earns Luna worth 1 SDR 
+\end{itemize}
+As Luna is minted to match Terra offers, volatility is moved from
+Terra price to Luna supply. If unmitigated, this Luna dilution presents
+a problem for miners; their Luna stakes are worth a smaller portion
+of total available mining power post-contraction. Therefore, the system
+burns a portion of the Luna it has earned during expansions until
+Luna supply has reached its 1 billion equilibrium issuance. Therefore,
+Luna can have steady demand as a token with pro-rata rights to Terra
+mining over the long term. The next section discusses how the system
+offers countercyclical mining incentives to keep the market for mining
+and demand for Luna long-term stable through volatile macroeconomic
+cycles. 
+
+\subsection{Countercyclical Mining Rewards }
+
+Our objective is to counteract fluctuations in the value of mining
+Terra by calibrating mining rewards to be countercyclical. The main
+intuition behind a countercyclical policy is that it attempts to counteract
+economic cycles by increasing mining rewards during recessions and
+decreasing mining rewards during booms. The protocol has two levers
+at its disposal to calibrate mining rewards: transaction fees, and
+the proportion of seigniorage that gets allocated to miners. 
+\begin{itemize}
+\item Transaction fees: The protocol levies a small fee from every Terra
+transaction to reward miners. Fees default to 0.1\% but may vary over
+time to smooth out mining rewards. If mining rewards are declining,
+an increase in fees can reverse that trend. Conversely, high mining
+rewards give the protocol leeway to bring fees down. Fees are capped
+at 2\%, so they are restricted to a range that does not exceed the
+fees paid to traditional payment processors. 
+\item Seigniorage: Users can mint Terra by paying the system Luna. This
+Luna earned by the system is seigniorage, the value of newly minted
+currency minus the cost of issuance. The system burns a portion of
+seigniorage, which makes mining power scarcer and reduces mining competition.
+The remaining portion of seigniorage goes to the Treasury to finance
+fiscal stimulus. The system can calibrate the allocation of seigniorage
+between those two destinations to impact mining reward profiles. 
+\end{itemize}
+We use two key macroeconomic indicators as inputs for controlling
+mining rewards: money supply and transaction volume. Those two indicators
+are important signals for the performance of the economy. Looking
+at the equation for mining rewards: when the economy underperforms
+relative to recent history (money supply and transaction volume have
+decreased) a higher proportion of seigniorage is allocated to mining
+rewards, and transaction fees increase; conversely, when the economy
+outperforms recent history (money supply and transaction volume have
+increased) a lower proportion of seigniorage is allocated to mining
+rewards, and transaction fees decrease. 
+
+Phrasing the above more formally, both the proportion of seigniorage
+that gets allocated to mining rewards wt and the adjustment in transaction
+fees ft are controlled over time as follows:
+
+\[
+w_{t+1}=w_{t}+\beta\left(\frac{M_{t}}{M_{t}^{*}}-1\right)+\gamma\left(\frac{TV_{t}}{TV_{t}^{*}}-1\right)
+\]
+
+\[
+f_{t+1}=f_{t}+\kappa\left(\frac{M_{t}}{M_{t}^{*}}-1\right)+\lambda\left(\frac{TV_{t}}{TV_{t}^{*}}-1\right)
+\]
+
+In the above $M_{t}$ is Terra money supply at time $t$, $M_{t}^{*}$
+is the historical moving average of money supply over the previous
+quarter, $TV_{t}$ is Terra transaction volume at time $t$ and $TV_{t}^{*}$
+is correspondingly the historical moving average of transaction volume
+over the previous quarter. The parameters \textgreek{b}, \textgreek{g},
+\textgreek{k} and \textgreek{l} are all negative real numbers in the
+range {[}-1, 0) and will be calibrated to produce responses that are
+gradual but effective. Indicative values that have worked well in
+our simulations are between -0.5 and -1 for \textgreek{b}, \textgreek{g}
+and between -0.005 and -0.01 for \textgreek{k}, \textgreek{l} respectively.
+Both wt and ft are restricted within the range imposed by the protocol
+(between 0\% and 90\% for wt, and between 0.01\% and 2\% for ft). 
+
+To see how this might work in practice: say that money supply is 10\%
+higher than quarterly average and transaction volume is 20\% higher
+than quarterly average. Let \textgreek{b}, \textgreek{g} be -0.5 and
+\textgreek{k}, \textgreek{l} be -0.01 respectively. The seigniorage
+allocation weight to mining rewards would decrease by 15\% and transaction
+fees would decrease by 0.3\% (both on an absolute basis). These are
+reasonable adjustments that allocate proportionally more capital to
+the Treasury and ease the fee burden on users in response to strong
+performance of the economy.
+\begin{center}
+\includegraphics[scale=1.25]{graph_tvgap}
+\par\end{center}
+
+Alternatively, as the graph shows, when the gap widens, i.e. as the
+economy shrinks, the fees will increase from the example starting
+point of 0.1\% to the maximum of 2\% that will still make Terra more
+convenient than Visa and Mastercard. 
+
+The rule we have outlined for making mining rewards countercyclical
+is simple, intuitive and easily programmable. It takes inspiration
+from Taylor\textquoteright s Rule (Taylor, 1993), utilized by monetary
+authorities banks to help frame the level of nominal interest rates
+as a function of inflation and output. Similarly, exactly as a central
+bank, the protocol observes the health of the economy, in our case
+the money supply and transaction volume, and adjusts its main levers
+to ensure the sustainability of the economy.
+
+\section{Growth-driven fiscal policy}
+
+National governments use expansionary fiscal spending with the objective
+of stimulating growth. On the balance, the hope of fiscal spending
+is that the economic activity instigated by the original spending
+results in a feedback loop that grows the economy more than the amount
+of money spent in the initial stimulus. This concept is captured by
+the spending multiplier \textemdash{} how many dollars of economic
+activity does one dollar of fiscal spending generate? The spending
+multiplier increases with the marginal propensity to consume, meaning
+that the effectiveness of the expansionary stimulus is directly related
+to how likely economic agents are to increase their spending. 
+
+In a previous section, we discussed how Terra seigniorage is directed
+to both miner rewards and the Treasury. At this point, it is worth
+describing how exactly the Treasury implements Terra's fiscal spending
+policy, with its core mandate being stimulating Terra's growth while
+ensuring its stability. In this manner, Terra achieves greater efficiency
+by returning seigniorage not allocated for stability back to its users.
+
+The Treasury main focus is the allocation of resources derived from
+seigniorage to decentralized application (dApp). To receive seigniorage
+from the Treasury, a dApp needs to register for consideration as an
+entity that operates on the Terra network. dApps are eligible for
+funding depending on their economic activity and use of funding. A
+dApp registers a wallet with the network that is used to track economic
+activity. Transactions that go through the wallet count towards the
+dApp's transaction volume.
+
+The funding procedure for a dApp works as follows: 
+\begin{itemize}
+\item A dApp applies for an account with the Treasury; the application includes
+metadata such as the Title, a url leading to a detailed page regarding
+the use of funding, the wallet address of the applicant, as well as
+auditing and governance procedures. 
+\item At regular voting intervals, Luna validators vote to accept or reject
+new dApp applications for Treasury accounts. The net number of votes
+(yes votes minus no votes) needs to exceed 1/3 of total available
+validator power for an application to be accepted.
+\item Luna validators may only exercise control over which dApps can open
+accounts with the Treasury. The funding itself is determined programmatically
+for each funding period by a weight that is assigned to each dApp.
+This allows the Treasury to prioritize dApps that earn the most funding. 
+\item At each voting session, Luna validators have the right to request
+that a dApp be blacklisted, for example because it behaves dishonestly
+or fails to account for its use of Treasury funds. Again, the net
+number of votes (yes votes minus no votes) needs to exceed 1/3 of
+total available validator power for the blacklist to be enforced.
+A blacklisted dApp loses access to its Treasury account and is no
+longer eligible for funding.
+\end{itemize}
+The motivation behind assigning funding weights to dApps is to maximize
+the impact of the stimulus on the economy by rewarding the dApps that
+are more likely to have a positive effect on the economy. The Treasury
+uses two criteria for allocating spending: (1) \textbf{robust economic
+activity} and (2) \textbf{efficient use of funding}. dApps with a
+strong track record of adoption receive support for their continued
+success, and dApps that have grown relative to their funding are rewarded
+with more seigniorage, as they have a successful track record of efficiently
+using their resources. 
+
+Those two criteria are combined into a single weight which determines
+the relative funding that dApps receive from the aggregate funding
+pool. For instance, a dApp with a weight of 2 would receive twice
+the amount of funding of a dApp with a weight of 1.
+
+We lay out the funding weight equation, followed by a detailed explanation
+of all the parts: For a time period t, let TV\_t be a dApp's transaction
+volume and F\_t be the Treasury funding received. Then we determine
+the funding weight $w_{t}$ for the period as follows:
+
+\[
+w_{t}=\left(1-\lambda\right)TV_{t}^{*}+\lambda\frac{\Delta TV_{t}^{*}}{F_{t-1}^{*}}
+\]
+
+The notation {*} denotes a moving average, so TV{*}\_t would be the
+moving average of transaction volume leading up to time period t,
+while \textgreek{D}TV{*}\_t would be a difference of moving averages
+of different lengths leading up to time period t. One might make the
+averaging window quarterly for example. The parameters \textgreek{k},
+\textgreek{l} are between 0 and 1 and determine the relative importance
+of the two terms being summed. Finally, the funding weights among
+all dApps are scaled to sum to 1.
+\begin{itemize}
+\item \textbf{The first term} is proportional to $TV_{t}^{*}$, the average
+transaction volume generated by the dApp in the recent past. This
+is an indicator of the dApp's \textbf{economic activity}, or more
+simply the size of its micro-economy.
+\item \textbf{The second term} is proportional to $\Delta TV*_{t}/F*_{t}-1$.
+The numerator describes the trend in transaction volume \textemdash{}
+it is the difference between a more and a less recent average. When
+positive, it means that the transaction volume is following an upward
+trajectory and vice versa. The denominator is the average funding
+amount received by the dApp in the recent past, up to and including
+the previous period. So the second term describes how economic activity
+is changing relative to past funding. Overall, larger values of this
+ratio capture instances where the dApp is fast-growing for each dollar
+of funding it has received. This is in fact the spending multiplier
+of the funding program, a prime indicator of \textbf{funding efficiency}. 
+\item The parameter \textgreek{l} is used to determine the relative importance
+of economic activity and funding efficiency. If it isset equal to
+1/2 then the two terms would have equal contribution. By decreasing
+the value of \textgreek{l}, the protocol can favor more heavily dApps
+with larger economies. Conversely, by increasing the value of \textgreek{l}
+the protocol can favor dApps that are using funding with high efficiency,
+for example by growing fast with little funding, even if they are
+smaller in size.
+\end{itemize}
+The votes on registering and blacklisting a dApp serve to minimize
+the risk that the above system is gamed during its infancy. It is
+the responsibility of Luna validators to hold dApps accountable for
+dishonest behavior and blacklist them if necessary. As the economy
+grows and becomes more decentralized, the bar to register and blacklist
+an App can be adjusted.
+
+An important advantage of distributing funding in a programmatic way
+is that it is simpler, objective, transparent and streamlined compared
+to open-ended voting systems. In fact, compared to decentralized voting
+systems, it is more predictable, because the inputs used to compute
+the funding weights are transparent and slow moving. Furthermore,
+this system requires less trust in Luna validators, given that the
+only authority they are vested with is determining whether or not
+a dApp is honest and makes legitimate use of funding.
+
+Overall, the objective of Terra governance is simple: fund the organizations
+and proposals with the highest net impact on the economy. This will
+include dApps solving real problems for users, increasing Terra's
+adoption and as a result increasing the GDP of the Terra economy. 
+
+\section{Conclusion}
+
+We have presented Terra, a stable digital currency that is designed
+to complement both existing fiat and cryptocurrencies as a way to
+transact and store value. The protocol adjusts the supply of Terra
+in response to changes in demand to keep its price stable. This is
+achieved using Luna, the mining token whose countercyclical rewards
+are designed to absorb volatility from changing economic cycles. Terra
+also achieves efficient adoption by returning seigniorage not invested
+in stability back to its users. Its transparent and democratic distribution
+mechanism gives dApps the power to attract and retain users by tapping
+into Terra's economic growth. 
+
+If Bitcoin\textquoteright s contribution to cryptocurrency was immutability,
+and Ethereum expressivity, our value-add will be usability. The potential
+applications of Terra are immense. Immediately, we foresee Terra being
+used as a medium-of-exchange in online payments, allowing people to
+transact freely at a fraction of the fees charged by other payment
+methods. As the world starts to become more and more decentralized,
+we see Terra being used as a dApp platform where price-stable token
+economies are built on Terra. Terra is looking to become the first
+usable currency and stability platform on the blockchain, unlocking
+the power of decentralization for mainstream users, merchants, and
+developers.
+
+\noindent {\small{}\newpage}\textbf{\small{}References }{\small\par}
+
+\noindent {\small{}Liu, Yukun and Tsyvinski, Aleh, Risks and Returns
+of Cryptocurrency (August 2018). NBER Working Paper No. w24877. Available
+at https://ssrn.com/abstract=3226806. }{\small\par}
+
+\noindent {\small{}Makarov, Igor and Schoar, Antoinette, Trading and
+Arbitrage in Cryptocurrency Markets (April 30, 2018). Available at
+SSRN: https://ssrn.com/abstract=3171204. }{\small\par}
+
+\noindent {\small{}Kereiakes, Evan, Rationale for Including Multiple
+Fiat Currencies in Terra\textquoteright s Peg (November 2018). Available
+at https://medium.com/terra-money/rationale-for-including-multiple-fiat-currencies-in-terras-peg-1ea9eae9de2a }{\small\par}
+
+\noindent {\small{}Taylor, John B. (1993). \textquotedbl Discretion
+versus Policy Rules in Practice.\textquotedbl{} Carnegie-Rochester
+Conference Series on Public Policy. 39: 195\textendash 214. }{\small\par}
+\end{document}
